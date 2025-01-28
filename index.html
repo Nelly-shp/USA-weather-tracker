@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <style>
+            html, body, #map {
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            /* Title styling */
+            #title {
+                position: absolute;
+                top: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1000;
+                background-color: rgba(255, 255, 255, 0.8);
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            .weather-info {
+                font-size: 14px;
+                font-weight: bold;
+                color: #333;
+            }
+        </style>
+        <title>NYC Weather Tracker</title>
+    </head>
+    <body>
+        <div id="title">NYC Weather Tracker</div>
+        <div id="map"></div>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+
+        <script>
+            var map = L.map('map', {
+                zoomControl: false, 
+                maxZoom: 28, 
+                minZoom: 1
+            }).setView([40.7128, -74.0060], 12); // Center map on NYC
+
+            L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                attribution: 'Map data © Google',
+                maxZoom: 28
+            }).addTo(map);
+
+            // Fetch current weather data for NYC
+            const API_KEY = "24797395915f2110013ee280203146a4"; // Replace with your OpenWeatherMap API key
+            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${24797395915f2110013ee280203146a4}&units=metric`;
+
+            async function fetchWeatherData() {
+                try {
+                    const response = await fetch(WEATHER_API_URL);
+                    const weatherData = await response.json();
+
+                    if (response.ok) {
+                        displayWeatherData(weatherData); // Handle successful weather data
+                    } else {
+                        console.error("Error fetching weather data:", weatherData.message);
+                    }
+                } catch (error) {
+                    console.error("Network error:", error);
+                }
+            }
+
+            // Display weather data on the map
+            function displayWeatherData(weatherData) {
+                const weatherInfo = `
+                    <b>Weather in NYC:</b><br>
+                    Temperature: ${weatherData.main.temp}°C<br>
+                    Feels Like: ${weatherData.main.feels_like}°C<br>
+                    Condition: ${weatherData.weather[0].description}<br>
+                    Humidity: ${weatherData.main.humidity}%<br>
+                    Wind Speed: ${weatherData.wind.speed} m/s
+                `;
+
+                // Add weather info to the map
+                const weatherControl = L.control({ position: "topright" });
+                weatherControl.onAdd = function () {
+                    const div = L.DomUtil.create("div", "weather-info");
+                    div.innerHTML = weatherInfo;
+                    div.style.padding = "10px";
+                    div.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+                    div.style.borderRadius = "8px";
+                    div.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.2)";
+                    return div;
+                };
+                weatherControl.addTo(map);
+            }
+
+            // Initialize Leaflet controls
+            var zoomControl = L.control.zoom({
+                position: 'topleft'
+            }).addTo(map);
+
+            L.control.locate({ locateOptions: { maxZoom: 19 } }).addTo(map);
+
+            var osmGeocoder = new L.Control.Geocoder({
+                collapsed: true,
+                position: 'topleft',
+                text: 'Search',
+                title: 'Search for a place'
+            }).addTo(map);
+            document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+            .className += ' fa fa-search';
+            document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+            .title += 'Search for a place';
+
+            var overlaysTree = [
+                {label: '<img src="legend/NYC_Borough_Boundary_1.png" /> NYC_Borough_Boundary', layer: layer_NYC_Borough_Boundary_1},
+                {label: "Google Satellite", layer: layer_GoogleSatellite_0},
+            ];
+
+            var lay = L.control.layers.tree(null, overlaysTree, {
+                collapsed: true,
+            });
+            lay.addTo(map);
+
+            // Fetch weather data after the map is initialized
+            fetchWeatherData();
+        </script>
+    </body>
+</html>
