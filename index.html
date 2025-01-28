@@ -67,6 +67,20 @@
                 minZoom: 1
             }).setView([40.7128, -74.0060], 12); // NYC coordinates
 
+            var nycBounds = [
+                [40.4774, -74.2581],
+                [40.9176, -73.7004]
+            ];
+
+            map.setMaxBounds(nycBounds);
+
+            map.fitBounds(nycBounds);
+
+            map.on('drag', funtion() {
+                map.panInsideBounds(nycBounds, {animate: false});
+
+                
+
             // Base Map Layer
             var baseMap = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
                 attribution: 'Map data © Google',
