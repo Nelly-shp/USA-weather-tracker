@@ -75,7 +75,7 @@
             const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3"; // API Key
 
             // OpenWeatherMap Tile Layer URL for weather data (e.g., temperature layer)
-            var weatherLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            var weatherLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${a07cf6ab0797ebd4db846df1c6003fd3}`, {
                 attribution: 'Weather data &copy; <a href="https://openweathermap.org/">OpenWeatherMap</a>',
                 maxZoom: 19
             });
@@ -84,7 +84,7 @@
             weatherLayer.addTo(map);
 
             // Fetch current weather data for NYC (Optional: you can display additional weather info)
-            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${API_KEY}&units=metric`;
+            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${a07cf6ab0797ebd4db846df1c6003fd3}&units=metric`;
 
             async function fetchWeatherData() {
                 try {
