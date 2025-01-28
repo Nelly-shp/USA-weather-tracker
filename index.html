@@ -77,12 +77,12 @@
             const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
 
             // Weather Layers
-            var temperatureLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            var temperatureLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${a07cf6ab0797ebd4db846df1c6003fd3}`, {
                 attribution: 'Weather data &copy; <a href="https://openweathermap.org/">OpenWeatherMap</a>',
                 maxZoom: 19
             });
 
-            var cloudCoverageLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            var cloudCoverageLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${a07cf6ab0797ebd4db846df1c6003fd3}`, {
                 attribution: 'Cloud data © OpenWeatherMap',
                 maxZoom: 19
             });
@@ -96,7 +96,7 @@
             }).addTo(map);
 
             // Add Weather Info using OpenWeatherMap Current Weather API
-            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${API_KEY}&units=metric`;
+            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${a07cf6ab0797ebd4db846df1c6003fd3}&units=metric`;
 
             async function fetchWeatherData() {
                 try {
