@@ -20,7 +20,6 @@
                 margin: 0;
             }
 
-            /* Title styling */
             #title {
                 position: absolute;
                 top: 10px;
@@ -50,54 +49,46 @@
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
         <script src="js/L.Control.Locate.min.js"></script>
-        <script src="js/leaflet.rotatedMarker.js"></script>
-        <script src="js/leaflet.pattern.js"></script>
-        <script src="js/leaflet-hash.js"></script>
-        <script src="js/Autolinker.min.js"></script>
-        <script src="js/rbush.min.js"></script>
-        <script src="js/labelgun.min.js"></script>
-        <script src="js/labels.js"></script>
         <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
 
         <script>
             // Initialize map and set view to NYC
             var map = L.map('map', {
                 zoomControl: false, 
-                maxZoom: 28, 
-                minZoom: 1
+                maxZoom: 19, 
+                minZoom: 10
             }).setView([40.7128, -74.0060], 12); // NYC coordinates
 
+            // Define NYC Bounds (Southwest and Northeast corners)
             var nycBounds = [
-                [40.4774, -74.2581],
-                [40.9176, -73.7004]
+                [40.4774, -74.2591], // Southwest
+                [40.9176, -73.7004]  // Northeast
             ];
 
             map.setMaxBounds(nycBounds);
-
             map.fitBounds(nycBounds);
 
-            map.on('drag', funtion() {
-                map.panInsideBounds(nycBounds, {animate: false});
+            // Prevent dragging out of bounds
+            map.on('drag', function () {
+                map.panInsideBounds(nycBounds, { animate: false });
             });
-
-                
 
             // Base Map Layer
             var baseMap = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
                 attribution: 'Map data © Google',
-                maxZoom: 28
+                maxZoom: 19
             }).addTo(map);
 
             // OpenWeatherMap API Key
             const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
 
             // Weather Layers
-            var temperatureLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${a07cf6ab0797ebd4db846df1c6003fd3}`, {
+            var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
                 attribution: 'Weather data &copy; <a href="https://openweathermap.org/">OpenWeatherMap</a>',
                 maxZoom: 19
             });
 
-            var cloudCoverageLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${a07cf6ab0797ebd4db846df1c6003fd3}`, {
+            var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
                 attribution: 'Cloud data © OpenWeatherMap',
                 maxZoom: 19
             });
@@ -111,7 +102,7 @@
             }).addTo(map);
 
             // Add Weather Info using OpenWeatherMap Current Weather API
-            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${a07cf6ab0797ebd4db846df1c6003fd3}&units=metric`;
+            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${API_KEY}&units=metric`;
 
             async function fetchWeatherData() {
                 try {
@@ -138,7 +129,6 @@
                     Wind Speed: ${weatherData.wind.speed} m/s
                 `;
 
-                // Add Weather Info as a Control on the Map
                 const weatherControl = L.control({ position: "topright" });
                 weatherControl.onAdd = function () {
                     const div = L.DomUtil.create("div", "weather-info");
@@ -152,7 +142,7 @@
                 weatherControl.addTo(map);
             }
 
-            // Initialize Controls for Zoom, Locate, and Geocoder
+            // Add zoom and geocoder controls
             L.control.zoom({ position: 'topleft' }).addTo(map);
             L.control.locate({ locateOptions: { maxZoom: 19 } }).addTo(map);
 
@@ -164,13 +154,12 @@
             }).addTo(map);
 
             document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
-            .className += ' fa fa-search';
-            document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
-            .title += 'Search for a place';
+                .className += ' fa fa-search';
 
-            // Fetch and Display Weather Data
+            // Fetch and display weather data
             fetchWeatherData();
         </script>
     </body>
 </html>
+
 
