@@ -71,13 +71,21 @@
                 maxZoom: 28
             }).addTo(map);
 
-            // OpenWeatherAPI Key
+            // OpenWeatherMap API Key
             const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3"; // API Key
 
-            // API URL with the key
-            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${a07cf6ab0797ebd4db846df1c6003fd3}&units=metric`;
+            // OpenWeatherMap Tile Layer URL for weather data (e.g., temperature layer)
+            var weatherLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+                attribution: 'Weather data &copy; <a href="https://openweathermap.org/">OpenWeatherMap</a>',
+                maxZoom: 19
+            });
 
-            // Fetch current weather data for NYC
+            // Add the weather layer to the map
+            weatherLayer.addTo(map);
+
+            // Fetch current weather data for NYC (Optional: you can display additional weather info)
+            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${API_KEY}&units=metric`;
+
             async function fetchWeatherData() {
                 try {
                     const response = await fetch(WEATHER_API_URL);
@@ -93,7 +101,7 @@
                 }
             }
 
-            // Display weather data on the map
+            // Display weather data on the map (optional)
             function displayWeatherData(weatherData) {
                 const weatherInfo = `
                     <b>Weather in NYC:</b><br>
@@ -104,7 +112,7 @@
                     Wind Speed: ${weatherData.wind.speed} m/s
                 `;
 
-                // Add weather info to the map
+                // Add weather info to the map (Optional: displays in a popup or in a control)
                 const weatherControl = L.control({ position: "topright" });
                 weatherControl.onAdd = function () {
                     const div = L.DomUtil.create("div", "weather-info");
@@ -141,4 +149,3 @@
         </script>
     </body>
 </html>
-
