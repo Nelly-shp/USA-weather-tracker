@@ -35,43 +35,17 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
 
-            /* Sidebar Styling */
-            #weather-widget {
-                position: absolute;
-                top: 20px;
-                right: 20px;
-                width: 250px;
-                background-color: rgba(255, 255, 255, 0.8);
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-                z-index: 1000;
-                max-height: 400px;
-                overflow-y: auto;
-            }
-
-            #weather-widget h3 {
-                margin-top: 0;
-                font-size: 20px;
-                color: #333;
-            }
-
-            #weather-widget .weather-info {
-                font-size: 14px;
-                color: #555;
-            }
+           #weather-info {
+               font-size: 14px;
+               font-weight: bold;
+               color: #333;
+           }
         </style>
         <title>USA Weather Tracker</title>
     </head>
     <body>
         <div id="title">USA Weather Tracker</div>
         <div id="map"></div>
-        <div id="weather-widget">
-            <h3>Weather Info</h3>
-            <div id="weather-info" class="weather-info">
-                <p>Select a location to see the weather information.</p>
-            </div>
-        </div>
 
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
@@ -109,6 +83,51 @@
 
             // OpenWeatherMap API Key
             const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
+
+
+            // API URL with the key
+            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${a07cf6ab0797ebd4db846df1c6003fd3}&units=metric`;
+
+            // Fetch current weather data for NYC
+            async function fetchWeatherData() {
+                try {
+                    const response = await fetch(WEATHER_API_URL);
+                    const weatherData = await response.json();
+
+                    if (response.ok) {
+                        displayWeatherData(weatherData); // Handle successful weather data
+                    } else {
+                        console.error("Error fetching weather data:", weatherData.message);
+                    }
+                } catch (error) {
+                    console.error("Network error:", error);
+                }
+            }
+
+            // Display weather data on the map
+            function displayWeatherData(weatherData) {
+                const weatherInfo = `
+                    <b>Weather in NYC:</b><br>
+                    Temperature: ${weatherData.main.temp}°C<br>
+                    Feels Like: ${weatherData.main.feels_like}°C<br>
+                    Condition: ${weatherData.weather[0].description}<br>
+                    Humidity: ${weatherData.main.humidity}%<br>
+                    Wind Speed: ${weatherData.wind.speed} m/s
+                `;
+
+                // Add weather info to the map
+                const weatherControl = L.control({ position: "topright" });
+                weatherControl.onAdd = function () {
+                    const div = L.DomUtil.create("div", "weather-info");
+                    div.innerHTML = weatherInfo;
+                    div.style.padding = "10px";
+                    div.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+                    div.style.borderRadius = "8px";
+                    div.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.2)";
+                    return div;
+                };
+                weatherControl.addTo(map);
+            }
 
             // --- WEATHER OVERLAY LAYERS ---
             var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
@@ -168,39 +187,8 @@
             legend.addTo(map);
             legend.getContainer().style.display = 'none'; // Initially hidden
 
-            // --- Function to fetch weather data from OpenWeatherMap ---
-            function updateWeatherWidget(lat, lon, address) {
-                var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data && data.main) {
-                            var temperature = data.main.temp;
-                            var feelsLike = data.main.feels_like;
-                            var humidity = data.main.humidity;
-                            var windSpeed = data.wind.speed;
-                            var weatherDescription = data.weather[0].description;
-
-                            var weatherHTML = `
-                                <strong>Address:</strong> ${address}<br>
-                                <strong>Temperature:</strong> ${temperature}°C<br>
-                                <strong>Feels Like:</strong> ${feelsLike}°C<br>
-                                <strong>Humidity:</strong> ${humidity}%<br>
-                                <strong>Wind Speed:</strong> ${windSpeed} m/s<br>
-                                <strong>Conditions:</strong> ${weatherDescription}<br>
-                            `;
-
-                            document.getElementById("weather-info").innerHTML = weatherHTML;
-                        } else {
-                            document.getElementById("weather-info").innerHTML = "<p>Error: Unable to fetch weather data.</p>";
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error fetching weather data: ", error);
-                        document.getElementById("weather-info").innerHTML = "<p>Error: Unable to fetch weather data.</p>";
-                    });
-            }
+          
 
             // --- Geocoder & Search Functionality ---
             var osmGeocoder = new L.Control.Geocoder({
@@ -233,6 +221,9 @@
                         updateWeatherWidget(lat, lon, "Address not found");
                     });
             });
+
+            // Fetch weather data after the map is initialized
+            fetchWeatherData();
         </script>
     </body>
 </html>
