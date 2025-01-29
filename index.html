@@ -44,7 +44,7 @@
         <script src="js/L.Control.Layers.Tree.min.js"></script>
         <script src="js/L.Control.Locate.min.js"></script>
         <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
-        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script> <!-- Add D3.js -->
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
         <script>
             // Initialize map and set view to USA
@@ -80,7 +80,7 @@
             });
 
             // OpenWeatherMap API Key
-            const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3"; // Make sure this key is valid
+            const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
 
             // --- WEATHER OVERLAY LAYERS ---
             var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
@@ -128,6 +128,7 @@
             L.control.layers(baseMaps, overlayMaps).addTo(map);
 
             // --- Dynamic legends --- 
+
             var legend = L.control({ position: 'bottomright' });
 
             legend.onAdd = function () {
@@ -136,12 +137,15 @@
 
                 // Temperature Legend
                 div.innerHTML += "<b>Temperature</b><br>";
+                
+                // Create a color gradient for temperature using a linear gradient (cold to hot)
                 div.innerHTML += '<div style="background: linear-gradient(to right, #0000FF, #00FFFF, #00FF00, #FFFF00, #FF0000); height: 10px; width: 100%;"></div>';
                 div.innerHTML += '<small>-20°C</small> <small style="float: right;">40°C</small>';
 
                 return div;
             };
 
+            // Add legend control to the map
             legend.addTo(map);
             legend.getContainer().style.display = 'none'; // Initially hidden
 
@@ -152,12 +156,14 @@
                 }
             }
 
+            // Hide legend when the layer is removed
             function hideLegendOnLayerRemove(layer) {
                 if (layer === temperatureLayer) {
                     legend.getContainer().style.display = 'none'; // Hide legend
                 }
             }
 
+            // Add event listeners to show/hide legend on layer toggle
             map.on('layeradd', function (e) {
                 showLegendOnLayerAdd(e.layer);
             });
@@ -180,15 +186,20 @@
             document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
                 .className += ' fa fa-search';
 
-            // Function to fetch weather data from openweathermap
+            // Function to fetch weather data from OpenWeatherMap
             function getWeatherData(lat, lon) {
                 var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+
+                // Log the URL to verify
+                console.log("API Request URL:", url);
 
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data); // Debugging log to check if data is correct
+                        // Log the API response to check if it’s correct
+                        console.log("Weather Data:", data);
 
+                        // Extract weather data
                         var temperature = data.main.temp;
                         var feelsLike = data.main.feels_like;
                         var humidity = data.main.humidity;
@@ -223,7 +234,9 @@
                 // Call the weather data function to get and display weather info
                 getWeatherData(lat, lon);
             });
+
         </script>
     </body>
 </html>
+
 
