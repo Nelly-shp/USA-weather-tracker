@@ -48,7 +48,7 @@
         <script>
             // Initialize map and set view to USA
             var map = L.map('map', {
-                zoomControl: true, 
+                zoomControl: false, 
                 maxZoom: 19, 
                 minZoom: 3
             }).setView([39.8283, -98.5795], 4); // Center of the USA
@@ -104,6 +104,12 @@
                 subdomains: ['a', 'b', 'c']
             });
 
+            var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+                attribution: 'Storm data &copy; <a href="https://openweathermap.org/">OpenWeatherMap</a>',
+                maxZoom: 19,
+                opacity: 0.7 // Optional: Set opacity for better visibility with other layers
+            });
+            
             // --- LAYER CONTROL ---
             var baseMaps = {
                 "Satellite (Esri)": satelliteMap,
@@ -114,7 +120,8 @@
                 "Temperature": temperatureLayer,
                 "Cloud Coverage": cloudCoverageLayer,
                 "Precipitation": precipitationLayer,
-                "Wind": windLayer
+                "Wind": windLayer,
+                "Storm Tracker": stormTrackerLayer
             };
 
             L.control.layers(baseMaps, overlayMaps).addTo(map);
