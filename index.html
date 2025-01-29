@@ -49,7 +49,7 @@
             // Initialize map and set view to USA
             var map = L.map('map', {
                 zoomControl: true, 
-                maxZoom: 10, 
+                maxZoom: 19, 
                 minZoom: 3
             }).setView([39.8283, -98.5795], 4); // Center of the USA
 
@@ -75,7 +75,7 @@
 
             var esriGrayTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
                 attribution: '&copy; Esri, HERE, Garmin, FAO, NOAA, USGS',
-                maxZoom: 16
+                maxZoom: 19
             });
 
             // OpenWeatherMap API Key
