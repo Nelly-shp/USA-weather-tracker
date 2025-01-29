@@ -151,14 +151,14 @@
 
             // --- Show Legend when Layer is Added ---
             function showLegendOnLayerAdd(layer) {
-                if (layer === 'Temperature') {
+                if (layer === temperatureLayer) {
                     legend.getContainer().style.display = 'block'; // Show legend
                 }
             }
 
             // Hide legend when the layer is removed
             function hideLegendOnLayerRemove(layer) {
-                if (layer === 'Temperature') {
+                if (layer === temperatureLayer) {
                     legend.getContainer().style.display = 'none'; // Hide legend
                 }
             }
