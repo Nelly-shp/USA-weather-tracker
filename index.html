@@ -38,8 +38,8 @@
             /* Sidebar Styling */
             #weather-widget {
                 position: absolute;
-                top: 60px;
-                left: 20px;
+                top: 20px;
+                right: 20px;
                 width: 250px;
                 background-color: rgba(255, 255, 255, 0.8);
                 padding: 20px;
@@ -169,7 +169,7 @@
             legend.getContainer().style.display = 'none'; // Initially hidden
 
             // --- Function to fetch weather data from OpenWeatherMap ---
-            function updateWeatherWidget(lat, lon) {
+            function updateWeatherWidget(lat, lon, address) {
                 var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
 
                 fetch(url)
@@ -183,6 +183,7 @@
                             var weatherDescription = data.weather[0].description;
 
                             var weatherHTML = `
+                                <strong>Address:</strong> ${address}<br>
                                 <strong>Temperature:</strong> ${temperature}°C<br>
                                 <strong>Feels Like:</strong> ${feelsLike}°C<br>
                                 <strong>Humidity:</strong> ${humidity}%<br>
@@ -216,12 +217,26 @@
                 var lat = e.latlng.lat;
                 var lon = e.latlng.lng;
 
-                // Update weather widget
-                updateWeatherWidget(lat, lon);
+                // Reverse geocode to get the address
+                var reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+
+                fetch(reverseGeocodeUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        var address = data.display_name || "Address not found";
+                        // Update weather widget with address and weather data
+                        updateWeatherWidget(lat, lon, address);
+                    })
+                    .catch(error => {
+                        console.error("Error reverse geocoding: ", error);
+                        // Update widget with error message
+                        updateWeatherWidget(lat, lon, "Address not found");
+                    });
             });
         </script>
     </body>
 </html>
+
 
 
 
