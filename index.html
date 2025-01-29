@@ -7,10 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="css/leaflet.css">
-    <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
     <link rel="stylesheet" href="css/L.Control.Locate.min.css">
-    <link rel="stylesheet" href="css/qgis2web.css">
-    <link rel="stylesheet" href="css/fontawesome-all.min.css">
     <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
     <style>
         html, body, #map {
@@ -39,6 +36,10 @@
             font-size: 14px;
             font-weight: bold;
             color: #333;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
     </style>
     <title>USA Weather Tracker</title>
@@ -46,82 +47,67 @@
 <body>
     <div id="title">USA Weather Tracker</div>
     <div id="map"></div>
-    
+
     <script src="js/leaflet.js"></script>
-    <script src="js/L.Control.Layers.Tree.min.js"></script>
     <script src="js/L.Control.Locate.min.js"></script>
     <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
-    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
     <script>
-        // Initialize map and set view to the USA
-        var map = L.map('map', {
-            zoomControl: true,
-            maxZoom: 19,
-            minZoom: 3
-        }).setView([39.8283, -98.5795], 4);
+        // Initialize Map
+        var map = L.map('map').setView([39.8283, -98.5795], 4); // Centered on USA
 
-        // Define USA Bounds
-        var usaBounds = [
-            [15.0, -130.0], // Southwest
-            [55.0, -60.0]   // Northeast
-        ];
-        map.setMaxBounds(usaBounds);
-        map.fitBounds(usaBounds);
-
-        // --- BASEMAPS ---
-        var satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri, Maxar, Earthstar Geographics',
-            maxZoom: 19
+        // Base Map Layer
+        var satelliteMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
         var esriGrayTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '&copy; Esri, HERE, Garmin, FAO, NOAA, USGS',
+            attribution: '&copy; Esri, HERE, Garmin, NOAA, USGS',
             maxZoom: 19
         });
 
         // OpenWeatherMap API Key
         const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
 
-        // Fetch Weather Data for NYC
-        async function fetchWeatherData() {
-            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${API_KEY}&units=metric`;
-            
+        // Weather Control (To Update Weather Info)
+        var weatherControl = L.control({ position: "topright" });
+        weatherControl.onAdd = function () {
+            this._div = L.DomUtil.create("div", "weather-info");
+            this._div.innerHTML = "Search for a location to see weather.";
+            return this._div;
+        };
+        weatherControl.addTo(map);
+
+        // Function to Fetch Weather Data
+        async function fetchWeatherData(lat, lon) {
+            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+
             try {
                 const response = await fetch(WEATHER_API_URL);
                 const weatherData = await response.json();
+                
                 if (response.ok) {
                     displayWeatherData(weatherData);
                 } else {
                     console.error("Error fetching weather data:", weatherData.message);
+                    weatherControl._div.innerHTML = "Weather data not available.";
                 }
             } catch (error) {
                 console.error("Network error:", error);
+                weatherControl._div.innerHTML = "Unable to fetch weather.";
             }
         }
 
-        // Display Weather Data on the Map
+        // Function to Display Weather on the Map
         function displayWeatherData(weatherData) {
-            const weatherInfo = `
-                <b>Weather in NYC:</b><br>
+            weatherControl._div.innerHTML = `
+                <b>Weather in ${weatherData.name}:</b><br>
                 Temperature: ${weatherData.main.temp}°C<br>
                 Feels Like: ${weatherData.main.feels_like}°C<br>
                 Condition: ${weatherData.weather[0].description}<br>
                 Humidity: ${weatherData.main.humidity}%<br>
                 Wind Speed: ${weatherData.wind.speed} m/s
             `;
-
-            const weatherControl = L.control({ position: "topright" });
-            weatherControl.onAdd = function () {
-                const div = L.DomUtil.create("div", "weather-info");
-                div.innerHTML = weatherInfo;
-                div.style.padding = "10px";
-                div.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-                div.style.borderRadius = "8px";
-                div.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.2)";
-                return div;
-            };
-            weatherControl.addTo(map);
         }
 
         // --- WEATHER OVERLAY LAYERS ---
@@ -146,14 +132,14 @@
         });
 
         var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${API_KEY}`, {
-            attribution: 'Storm data &copy; OpenWeatherMap',
+            attribution: 'Storm data © OpenWeatherMap',
             maxZoom: 19,
             opacity: 0.7
         });
 
         // --- LAYER CONTROL ---
         var baseMaps = {
-            "Satellite (Esri)": satelliteMap,
+            "Satellite (OpenStreetMap)": satelliteMap,
             "Grayscale Terrain (Esri)": esriGrayTopo
         };
 
@@ -167,19 +153,38 @@
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-        // --- SEARCH FUNCTIONALITY ---
-        var osmGeocoder = new L.Control.Geocoder({
-            collapsed: true,
-            position: 'topleft',
-            text: 'Search',
-            title: 'Search for a place'
+        // --- SHOW LEGEND ---
+        var legend = L.control({ position: 'bottomright' });
+        legend.onAdd = function () {
+            var div = L.DomUtil.create('div', 'info legend');
+            div.innerHTML = "<h4>Legend</h4>";
+            div.innerHTML += "<b>Temperature</b><br>";
+            div.innerHTML += '<div style="background: linear-gradient(to right, #0000FF, #00FFFF, #00FF00, #FFFF00, #FF0000); height: 10px; width: 100%;"></div>';
+            div.innerHTML += '<small>-20°C</small> <small style="float: right;">40°C</small>';
+            return div;
+        };
+        legend.addTo(map);
+        legend.getContainer().style.display = 'none';
+
+        // Add Search Bar (Geocoder)
+        var geocoder = L.Control.geocoder({
+            collapsed: false,
+            placeholder: "Search for a place...",
+            defaultMarkGeocode: false
         }).addTo(map);
 
-        // Fetch weather data after the map is initialized
-        fetchWeatherData();
+        // When a location is selected
+        geocoder.on('markgeocode', function(e) {
+            var latlng = e.geocode.center; // Get lat/lon of searched place
+            map.setView(latlng, 10); // Zoom to location
+
+            // Fetch Weather Data for Searched Location
+            fetchWeatherData(latlng.lat, latlng.lng);
+        });
     </script>
 </body>
 </html>
+
 
 
 
