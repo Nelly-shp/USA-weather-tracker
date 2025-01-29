@@ -150,26 +150,26 @@
             legend.getContainer().style.display = 'none'; // Initially hidden
 
             // --- Show Legend when Layer is Added ---
-            function showLegendOnLayerAdd(layerName) {
-                if (layerName === 'Temperature') {
+            function showLegendOnLayerAdd(layer) {
+                if (layer === 'Temperature') {
                     legend.getContainer().style.display = 'block'; // Show legend
                 }
             }
 
             // Hide legend when the layer is removed
-            function hideLegendOnLayerRemove(layerName) {
-                if (layerName === 'Temperature') {
+            function hideLegendOnLayerRemove(layer) {
+                if (layer === 'Temperature') {
                     legend.getContainer().style.display = 'none'; // Hide legend
                 }
             }
 
             // Add event listeners to show/hide legend on layer toggle
             map.on('layeradd', function (e) {
-                showLegendOnLayerAdd(e.layer.options.name);
+                showLegendOnLayerAdd(e.layer);
             });
 
             map.on('layerremove', function (e) {
-                hideLegendOnLayerRemove(e.layer.options.name);
+                hideLegendOnLayerRemove(e.layer);
             });
 
             // --- ADDITIONAL FEATURES ---
