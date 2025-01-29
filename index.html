@@ -134,38 +134,69 @@
                 var div = L.DomUtil.create('div', 'info legend');
                 div.innerHTML = "<h4>Legend</h4>";
 
-                div.innerHTML += '<i style="background: #ff0000;"></i> Temperature<br>';
-                div.innerHTML += '<i style="background: #0000ff;"></i> Cloud Coverage<br>';
+               // Temperature Legend
+                div.innerHTML += "<b>Temperature</b><br>";
+                div.innerHTML += '<i style="background: #0000FF;"></i> -20°C<br>';
+                div.innerHTML += '<i style="background: #00FF00;"></i> 0°C<br>';
+                div.innerHTML += '<i style="background: #FF0000;"></i> 40°C<br>';
+
+    // Cloud Coverage Legend
+                div.innerHTML += "<br><b>Cloud Coverage</b><br>";
+                div.innerHTML += '<i style="background: #FFFFFF;"></i> 0% (Clear)<br>';
+                div.innerHTML += '<i style="background: #808080;"></i> 50% (Partly Cloudy)<br>';
+                div.innerHTML += '<i style="background: #000000;"></i> 100% (Overcast)<br>';
+
+    // Precipitation Legend
+                div.innerHTML += "<br><b>Precipitation</b><br>";
+                div.innerHTML += '<i style="background: #00FFFF;"></i> No Rain<br>';
+                div.innerHTML += '<i style="background: #0000FF;"></i> Light Rain<br>';
+                div.innerHTML += '<i style="background: #000080;"></i> Heavy Rain<br>';
+
+    // Wind Legend
+                div.innerHTML += "<br><b>Wind Speed</b><br>";
+                div.innerHTML += '<i style="background: #00FF00;"></i> Calm<br>';
+                div.innerHTML += '<i style="background: #FFFF00;"></i> Moderate<br>';
+                div.innerHTML += '<i style="background: #FF0000;"></i> Strong<br>';
 
                 return div;
-            };
+        };
 
-            // Add legend control to the map
-    legend.addTo(map);
-    legend.getContainer().style.display = 'none'; // Initially hidden
+// Add legend control to the map
+        legend.addTo(map);
+        legend.getContainer().style.display = 'none'; // Initially hidden
 
-    // --- Show Legend when Layer is Added ---
-    function showLegendOnLayerAdd(layerName) {
-        if (layerName === 'Temperature' || layerName === 'Cloud Coverage') {
-            legend.getContainer().style.display = 'block'; // Show legend
-        }
+   // Show legend when a weather layer is added
+function showLegendOnLayerAdd(layerName) {
+    if (layerName === 'Temperature') {
+        legend.getContainer().style.display = 'block'; // Show legend
+        legend.getContainer().innerHTML = "<h4>Temperature Legend</h4>" +
+            '<i style="background: #0000FF;"></i> -20°C<br>' +
+            '<i style="background: #00FF00;"></i> 0°C<br>' +
+            '<i style="background: #FF0000;"></i> 40°C<br>';
+    } else if (layerName === 'Cloud Coverage') {
+        legend.getContainer().style.display = 'block'; // Show legend
+        legend.getContainer().innerHTML = "<h4>Cloud Coverage Legend</h4>" +
+            '<i style="background: #FFFFFF;"></i> 0% (Clear)<br>' +
+            '<i style="background: #808080;"></i> 50% (Partly Cloudy)<br>' +
+            '<i style="background: #000000;"></i> 100% (Overcast)<br>';
     }
+    // Add similar conditions for other layers like Precipitation, Wind, etc.
+}
 
-    // Hide legend when the layer is removed
-    function hideLegendOnLayerRemove(layerName) {
-        if (layerName === 'Temperature' || layerName === 'Cloud Coverage') {
-            legend.getContainer().style.display = 'none'; // Hide legend
-        }
-    }
+// Hide legend when a weather layer is removed
+function hideLegendOnLayerRemove(layerName) {
+    legend.getContainer().style.display = 'none'; // Hide legend
+}
 
-    // Add event listeners to show/hide legend on layer toggle
-    map.on('layeradd', function (e) {
-        showLegendOnLayerAdd(e.layer.options.name);
-    });
+// Add event listeners to show/hide legend on layer toggle
+map.on('layeradd', function (e) {
+    showLegendOnLayerAdd(e.layer.options.name);
+});
 
-    map.on('layerremove', function (e) {
-        hideLegendOnLayerRemove(e.layer.options.name);
-    });
+map.on('layerremove', function (e) {
+    hideLegendOnLayerRemove(e.layer.options.name);
+});
+
 
     // --- Add Layers to Control ---
     temperatureLayer.options.name = 'Temperature';
