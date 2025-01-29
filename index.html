@@ -65,7 +65,7 @@
 
             // Remove the previous NYC-specific drag bounds restriction
             map.on('drag', function () {
-                map.panInsideBounds(usaBounds, { animate: false });
+                map.panInsideBounds(usaBounds, { animate: true});
             });
 
             // --- BASEMAPS ---
