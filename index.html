@@ -126,6 +126,52 @@
 
             L.control.layers(baseMaps, overlayMaps).addTo(map);
 
+            // --- Dynamic legends --- 
+
+            var legen= L.control({position: 'bottomright'});
+
+            legend.onAdd = function () {
+                var div = L.DomUtil.create('div', 'info legend');
+                div.innerHTML = "<h4>Legend</h4>";
+
+                div.innerHTML += '<i style="background: #ff0000;"></i> Temperature<br>';
+                div.innerHTML += '<i style="background: #0000ff;"></i> Cloud Coverage<br>';
+
+                return div:
+            };
+
+            // Add legend control to the map
+    legend.addTo(map);
+    legend.getContainer().style.display = 'none'; // Initially hidden
+
+    // --- Show Legend when Layer is Added ---
+    function showLegendOnLayerAdd(layerName) {
+        if (layerName === 'Temperature' || layerName === 'Cloud Coverage') {
+            legend.getContainer().style.display = 'block'; // Show legend
+        }
+    }
+
+    // Hide legend when the layer is removed
+    function hideLegendOnLayerRemove(layerName) {
+        if (layerName === 'Temperature' || layerName === 'Cloud Coverage') {
+            legend.getContainer().style.display = 'none'; // Hide legend
+        }
+    }
+
+    // Add event listeners to show/hide legend on layer toggle
+    map.on('layeradd', function (e) {
+        showLegendOnLayerAdd(e.layer.options.name);
+    });
+
+    map.on('layerremove', function (e) {
+        hideLegendOnLayerRemove(e.layer.options.name);
+    });
+
+    // --- Add Layers to Control ---
+    temperatureLayer.options.name = 'Temperature';
+    cloudCoverageLayer.options.name = 'Cloud Coverage';
+</script>
+
             // --- ADDITIONAL FEATURES ---
             L.control.zoom({ position: 'topleft' }).addTo(map);
             L.control.locate({ locateOptions: { maxZoom: 19 } }).addTo(map);
