@@ -46,7 +46,6 @@
     <body>
         <div id="title">USA Weather Tracker</div>
         <div id="map"></div>
-
         <script src="js/leaflet.js"></script>
         <script src="js/L.Control.Layers.Tree.min.js"></script>
         <script src="js/L.Control.Locate.min.js"></script>
@@ -86,7 +85,7 @@
 
 
             // API URL with the key
-            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${a07cf6ab0797ebd4db846df1c6003fd3}&units=metric`;
+            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${API_KEY}&units=metric`;
 
             // Fetch current weather data for NYC
             async function fetchWeatherData() {
@@ -204,23 +203,6 @@
             osmGeocoder.on('select', function(e) {
                 var lat = e.latlng.lat;
                 var lon = e.latlng.lng;
-
-                // Reverse geocode to get the address
-                var reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
-
-                fetch(reverseGeocodeUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        var address = data.display_name || "Address not found";
-                        // Update weather widget with address and weather data
-                        updateWeatherWidget(lat, lon, address);
-                    })
-                    .catch(error => {
-                        console.error("Error reverse geocoding: ", error);
-                        // Update widget with error message
-                        updateWeatherWidget(lat, lon, "Address not found");
-                    });
-            });
 
             // Fetch weather data after the map is initialized
             fetchWeatherData();
