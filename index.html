@@ -139,13 +139,13 @@
                 maxZoom: 19
             });
 
-            var precipitationLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            var precipitationLayer = L.tileLayer(`https://.tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
                 attribution: 'Precipitation data © OpenWeatherMap',
                 maxZoom: 19,
                 subdomains: ['a', 'b', 'c']
             });
 
-            var windLayer = L.tileLayer(`https://{s}.tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            var windLayer = L.tileLayer(`https://.tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
                 attribution: 'Wind data © OpenWeatherMap',
                 maxZoom: 19,
                 subdomains: ['a', 'b', 'c']
@@ -197,15 +197,15 @@
                 title: 'Search for a place'
             }).addTo(map);
 
-            document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
-                .className += ' fa fa-search';
+            document.querySelector('leaflet-control-geocoder-icon')[0]
+                .classList.add('fa', 'fa-search';
 
             osmGeocoder.on('select', function(e) {
                 var lat = e.latlng.lat;
                 var lon = e.latlng.lng;
 
-            // Fetch weather data after the map is initialized
-            fetchWeatherData();
+        / Fetch weather data after the map is initialized
+        fetchWeatherData();
         </script>
     </body>
 </html>
