@@ -64,13 +64,14 @@
             }).setView([40.7128, -74.0060], 12); // NYC coordinates
 
             // Define NYC Bounds (Southwest and Northeast corners)
-            var nycBounds = [
-                [40.4774, -74.2591], // Southwest
-                [40.9176, -73.7004]  // Northeast
+            var usaBounds = [
+                [24.396308, -125.0],  // Southwest (Hawaii is further west, but we exclude it for continental US)
+                  [49.384358, -66.93457] // Northeast
             ];
 
-            map.setMaxBounds(nycBounds);
-            map.fitBounds(nycBounds);
+            map.setMaxBounds(usaBounds);
+            map.fitBounds(usaBounds);
+
 
             // Prevent dragging out of bounds
             map.on('drag', function () {
