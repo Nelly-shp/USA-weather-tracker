@@ -174,28 +174,30 @@
                 .className += ' fa fa-search';
 
             
+        
         // Function to fetch weather data from OpenWeatherMap
         function getWeatherData(lat, lon) {
             var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
         
-            // Log the URL to verify
             console.log("API Request URL:", url);
         
             fetch(url)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok " + response.statusText);
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    // Log the API response to check if it’s correct
                     console.log("Weather Data:", data);
         
                     if (data && data.main) {
-                        // Extract weather data
                         var temperature = data.main.temp;
                         var feelsLike = data.main.feels_like;
                         var humidity = data.main.humidity;
                         var windSpeed = data.wind.speed;
                         var weatherDescription = data.weather[0].description;
         
-                        // Create a popup with the weather info
                         var popupContent = `
                             <h4>Weather Info</h4>
                             <strong>Temperature:</strong> ${temperature}°C<br>
@@ -205,13 +207,11 @@
                             <strong>Conditions:</strong> ${weatherDescription}<br>
                         `;
         
-                        // Log the popup content to verify
                         console.log("Popup Content:", popupContent);
         
-                        // Add a marker and popup with the weather data
                         L.marker([lat, lon]).addTo(map)
                             .bindPopup(popupContent)
-                            .openPopup(); // Ensure the popup opens automatically
+                            .openPopup();
                     } else {
                         console.error("Error: Invalid weather data received");
                     }
@@ -227,7 +227,6 @@
             var lon = e.latlng.lng;
             console.log("Location selected: ", lat, lon);
         
-            // Call the weather data function to get and display weather info
             getWeatherData(lat, lon);
         });
         </script>
