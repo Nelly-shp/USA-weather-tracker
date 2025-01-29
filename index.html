@@ -1,214 +1,186 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <link rel="stylesheet" href="css/leaflet.css">
-        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
-        <link rel="stylesheet" href="css/L.Control.Locate.min.css">
-        <link rel="stylesheet" href="css/qgis2web.css">
-        <link rel="stylesheet" href="css/fontawesome-all.min.css">
-        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
-        <style>
-            html, body, #map {
-                width: 100%;
-                height: 100%;
-                padding: 0;
-                margin: 0;
-            }
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="css/leaflet.css">
+    <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+    <link rel="stylesheet" href="css/L.Control.Locate.min.css">
+    <link rel="stylesheet" href="css/qgis2web.css">
+    <link rel="stylesheet" href="css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+    <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
 
-            #title {
-                position: absolute;
-                top: 10px;
-                left: 50%;
-                transform: translateX(-50%);
-                z-index: 1000;
-                background-color: rgba(255, 255, 255, 0.8);
-                padding: 10px 20px;
-                border-radius: 8px;
-                font-size: 18px;
-                font-weight: bold;
-                color: #333;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            }
+        #title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
 
-           #weather-info {
-               font-size: 14px;
-               font-weight: bold;
-               color: #333;
-           }
-        </style>
-        <title>USA Weather Tracker</title>
-    </head>
-    <body>
-        <div id="title">USA Weather Tracker</div>
-        <div id="map"></div>
-        <script src="js/leaflet.js"></script>
-        <script src="js/L.Control.Layers.Tree.min.js"></script>
-        <script src="js/L.Control.Locate.min.js"></script>
-        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
-        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        .weather-info {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+    <title>USA Weather Tracker</title>
+</head>
+<body>
+    <div id="title">USA Weather Tracker</div>
+    <div id="map"></div>
+    
+    <script src="js/leaflet.js"></script>
+    <script src="js/L.Control.Layers.Tree.min.js"></script>
+    <script src="js/L.Control.Locate.min.js"></script>
+    <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-        <script>
-            // Initialize map and set view to USA
-            var map = L.map('map', {
-                zoomControl: false, 
-                maxZoom: 19, 
-                minZoom: 3
-            }).setView([39.8283, -98.5795], 4); // Center of the USA
+    <script>
+        // Initialize map and set view to the USA
+        var map = L.map('map', {
+            zoomControl: true,
+            maxZoom: 19,
+            minZoom: 3
+        }).setView([39.8283, -98.5795], 4);
 
-            // Define USA Bounds (Southwest and Northeast corners)
-            var usaBounds = [
-                [15.0, -130.0],  // Southwest (includes some ocean and Mexico)
-                [55.0, -60.0]     // Northeast (includes some of Canada)
-            ];
+        // Define USA Bounds
+        var usaBounds = [
+            [15.0, -130.0], // Southwest
+            [55.0, -60.0]   // Northeast
+        ];
+        map.setMaxBounds(usaBounds);
+        map.fitBounds(usaBounds);
 
-            map.setMaxBounds(usaBounds);
-            map.fitBounds(usaBounds);
+        // --- BASEMAPS ---
+        var satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri, Maxar, Earthstar Geographics',
+            maxZoom: 19
+        }).addTo(map);
 
-            // --- BASEMAPS ---
-            var satelliteMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri, Maxar, Earthstar Geographics',
-                maxZoom: 19
-            }).addTo(map); // Set as default
+        var esriGrayTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; Esri, HERE, Garmin, FAO, NOAA, USGS',
+            maxZoom: 19
+        });
 
-            var esriGrayTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-                attribution: '&copy; Esri, HERE, Garmin, FAO, NOAA, USGS',
-                maxZoom: 19
-            });
+        // OpenWeatherMap API Key
+        const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
 
-            // OpenWeatherMap API Key
-            const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
-
-
-            // API URL with the key
+        // Fetch Weather Data for NYC
+        async function fetchWeatherData() {
             const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=New York,US&appid=${API_KEY}&units=metric`;
-
-            // Fetch current weather data for NYC
-            async function fetchWeatherData() {
-                try {
-                    const response = await fetch(WEATHER_API_URL);
-                    const weatherData = await response.json();
-
-                    if (response.ok) {
-                        displayWeatherData(weatherData); // Handle successful weather data
-                    } else {
-                        console.error("Error fetching weather data:", weatherData.message);
-                    }
-                } catch (error) {
-                    console.error("Network error:", error);
+            
+            try {
+                const response = await fetch(WEATHER_API_URL);
+                const weatherData = await response.json();
+                if (response.ok) {
+                    displayWeatherData(weatherData);
+                } else {
+                    console.error("Error fetching weather data:", weatherData.message);
                 }
+            } catch (error) {
+                console.error("Network error:", error);
             }
+        }
 
-            // Display weather data on the map
-            function displayWeatherData(weatherData) {
-                const weatherInfo = `
-                    <b>Weather in NYC:</b><br>
-                    Temperature: ${weatherData.main.temp}°C<br>
-                    Feels Like: ${weatherData.main.feels_like}°C<br>
-                    Condition: ${weatherData.weather[0].description}<br>
-                    Humidity: ${weatherData.main.humidity}%<br>
-                    Wind Speed: ${weatherData.wind.speed} m/s
-                `;
+        // Display Weather Data on the Map
+        function displayWeatherData(weatherData) {
+            const weatherInfo = `
+                <b>Weather in NYC:</b><br>
+                Temperature: ${weatherData.main.temp}°C<br>
+                Feels Like: ${weatherData.main.feels_like}°C<br>
+                Condition: ${weatherData.weather[0].description}<br>
+                Humidity: ${weatherData.main.humidity}%<br>
+                Wind Speed: ${weatherData.wind.speed} m/s
+            `;
 
-                // Add weather info to the map
-                const weatherControl = L.control({ position: "topright" });
-                weatherControl.onAdd = function () {
-                    const div = L.DomUtil.create("div", "weather-info");
-                    div.innerHTML = weatherInfo;
-                    div.style.padding = "10px";
-                    div.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
-                    div.style.borderRadius = "8px";
-                    div.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.2)";
-                    return div;
-                };
-                weatherControl.addTo(map);
-            }
-
-            // --- WEATHER OVERLAY LAYERS ---
-            var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
-                attribution: 'Weather data &copy; <a href="https://openweathermap.org/">OpenWeatherMap</a>',
-                maxZoom: 19
-            });
-
-            var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
-                attribution: 'Cloud data © OpenWeatherMap',
-                maxZoom: 19
-            });
-
-            var precipitationLayer = L.tileLayer(`https://.tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
-                attribution: 'Precipitation data © OpenWeatherMap',
-                maxZoom: 19,
-                subdomains: ['a', 'b', 'c']
-            });
-
-            var windLayer = L.tileLayer(`https://.tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
-                attribution: 'Wind data © OpenWeatherMap',
-                maxZoom: 19,
-                subdomains: ['a', 'b', 'c']
-            });
-
-            var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${API_KEY}`, {
-                attribution: 'Storm data &copy; <a href="https://openweathermap.org/">OpenWeatherMap</a>',
-                maxZoom: 19,
-                opacity: 0.7 // Optional: Set opacity for better visibility with other layers
-            });
-
-            // --- LAYER CONTROL ---
-            var baseMaps = {
-                "Satellite (Esri)": satelliteMap,
-                "Grayscale Terrain (Esri)": esriGrayTopo
-            };
-
-            var overlayMaps = {
-                "Temperature": temperatureLayer,
-                "Cloud Coverage": cloudCoverageLayer,
-                "Precipitation": precipitationLayer,
-                "Wind": windLayer,
-                "Storm Tracker": stormTrackerLayer
-            };
-
-            L.control.layers(baseMaps, overlayMaps).addTo(map);
-
-            // --- SHOW LEGEND ---
-            var legend = L.control({ position: 'bottomright' });
-            legend.onAdd = function () {
-                var div = L.DomUtil.create('div', 'info legend');
-                div.innerHTML = "<h4>Legend</h4>";
-                div.innerHTML += "<b>Temperature</b><br>";
-                div.innerHTML += '<div style="background: linear-gradient(to right, #0000FF, #00FFFF, #00FF00, #FFFF00, #FF0000); height: 10px; width: 100%;"></div>';
-                div.innerHTML += '<small>-20°C</small> <small style="float: right;">40°C</small>';
+            const weatherControl = L.control({ position: "topright" });
+            weatherControl.onAdd = function () {
+                const div = L.DomUtil.create("div", "weather-info");
+                div.innerHTML = weatherInfo;
+                div.style.padding = "10px";
+                div.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+                div.style.borderRadius = "8px";
+                div.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.2)";
                 return div;
             };
-            legend.addTo(map);
-            legend.getContainer().style.display = 'none'; // Initially hidden
+            weatherControl.addTo(map);
+        }
 
+        // --- WEATHER OVERLAY LAYERS ---
+        var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            attribution: 'Weather data &copy; OpenWeatherMap',
+            maxZoom: 19
+        });
 
-          
+        var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            attribution: 'Cloud data © OpenWeatherMap',
+            maxZoom: 19
+        });
 
-            // --- Geocoder & Search Functionality ---
-            var osmGeocoder = new L.Control.Geocoder({
-                collapsed: true,
-                position: 'topleft',
-                text: 'Search',
-                title: 'Search for a place'
-            }).addTo(map);
+        var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            attribution: 'Precipitation data © OpenWeatherMap',
+            maxZoom: 19
+        });
 
-            document.querySelector('leaflet-control-geocoder-icon')[0]
-                .classList.add('fa', 'fa-search';
+        var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            attribution: 'Wind data © OpenWeatherMap',
+            maxZoom: 19
+        });
 
-            osmGeocoder.on('select', function(e) {
-                var lat = e.latlng.lat;
-                var lon = e.latlng.lng;
+        var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+            attribution: 'Storm data &copy; OpenWeatherMap',
+            maxZoom: 19,
+            opacity: 0.7
+        });
 
-        / Fetch weather data after the map is initialized
+        // --- LAYER CONTROL ---
+        var baseMaps = {
+            "Satellite (Esri)": satelliteMap,
+            "Grayscale Terrain (Esri)": esriGrayTopo
+        };
+
+        var overlayMaps = {
+            "Temperature": temperatureLayer,
+            "Cloud Coverage": cloudCoverageLayer,
+            "Precipitation": precipitationLayer,
+            "Wind": windLayer,
+            "Storm Tracker": stormTrackerLayer
+        };
+
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+        // --- SEARCH FUNCTIONALITY ---
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Search for a place'
+        }).addTo(map);
+
+        // Fetch weather data after the map is initialized
         fetchWeatherData();
-        </script>
-    </body>
+    </script>
+</body>
 </html>
+
 
 
 
