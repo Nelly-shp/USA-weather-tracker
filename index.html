@@ -185,7 +185,9 @@
 
             document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
                 .className += ' fa fa-search';
-        function getWeatherData(lat, lon) {
+
+            // Function to fetch weather data from openweathermap
+            function getWeatherData(lat, lon) {
                 var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
 
                 fetch(url)
@@ -227,9 +229,7 @@
                 getWeatherData(lat, lon);
             });
 
-            // --- ADDITIONAL FEATURES ---
-            L.control.zoom({ position: 'topleft' }).addTo(map);
-            L.control.locate({ locateOptions: { maxZoom: 19 } }).addTo(map);
+            
         </script>
     </body>
 </html>
