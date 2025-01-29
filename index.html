@@ -79,10 +79,12 @@
             });
 
             // Base Map Layer
-            var baseMap = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                attribution: 'Map data © Google',
-                maxZoom: 19
-            }).addTo(map);
+            var Jawg_Light = L.tileLayer('https://tile.jawg.io/jawg-light/{z}/{x}/{y}{r}.png?access-token={accessToken}', {
+	                attribution: '<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	                minZoom: 0,
+	                maxZoom: 22,
+	                accessToken: '<your accessToken>'
+            });
 
             // OpenWeatherMap API Key
             const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
