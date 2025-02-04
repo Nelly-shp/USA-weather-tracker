@@ -150,6 +150,9 @@
             maxZoom: 19
         });
 
+        // Define the Extreme Weather Alerts Layer Group
+        var extremeWeatherAlertsLayer = L.layerGroup().addTo(map);
+
         // Fetch Extreme Weather Alerts from Open-Meteo
         async function getExtremeWeatherAlerts(lat, lon) {
             const ALERTS_API_URL = `https://api.open-meteo.com/v1/alerts?latitude=${lat}&longitude=${lon}`;
@@ -171,6 +174,8 @@
 
         // Display Extreme Weather Alerts on the Map
         function displayExtremeWeatherAlerts(alerts, lat, lon) {
+            extremeWeatherAlertsLayer.clearLayers(); // Clear previous alerts
+            
             alerts.forEach(alert => {
                 const alertPopup = `
                     <b>${alert.event}</b><br>
@@ -201,7 +206,8 @@
             "Cloud Coverage": cloudCoverageLayer,
             "Precipitation": precipitationLayer,
             "Wind": windLayer,
-            "Storm Tracker": stormTrackerLayer
+            "Storm Tracker": stormTrackerLayer,
+            "Weather Alerts": extremeWeatherAlertsLayer
         };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
