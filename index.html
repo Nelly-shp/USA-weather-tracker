@@ -43,6 +43,16 @@
             max-width: 250px;
             line-height: 1.6;
         }
+
+        /* Adjust search bar visibility */
+        .leaflet-control-geocoder {
+            z-index: 1010;
+        }
+
+        /* Ensure layers tab is visible */
+        .leaflet-control-layers {
+            z-index: 1020;
+        }
     </style>
     <title>Global Weather Tracker</title>
 </head>
@@ -115,32 +125,31 @@
         }
         
         // Weather Overlays from OpenWeatherMap
-                var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
-                    attribution: 'Weather data &copy; OpenWeatherMap',
-                    maxZoom: 19
-                });
-        
-                var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
-                    attribution: 'Cloud data © OpenWeatherMap',
-                    maxZoom: 19
-                });
-        
-                var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
-                    attribution: 'Precipitation data © OpenWeatherMap',
-                    maxZoom: 19
-                });
-        
-                var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
-                    attribution: 'Wind data © OpenWeatherMap',
-                    maxZoom: 19
-                });
+        var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+            attribution: 'Weather data &copy; OpenWeatherMap',
+            maxZoom: 19
+        });
 
-                 var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
-                    attribution: 'Storm data © OpenWeatherMap',
-                    maxZoom: 19,
-                    
-                });
-        
+        var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+            attribution: 'Cloud data © OpenWeatherMap',
+            maxZoom: 19
+        });
+
+        var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+            attribution: 'Precipitation data © OpenWeatherMap',
+            maxZoom: 19
+        });
+
+        var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+            attribution: 'Wind data © OpenWeatherMap',
+            maxZoom: 19
+        });
+
+        var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+            attribution: 'Storm data © OpenWeatherMap',
+            maxZoom: 19
+        });
+
         // Fetch Extreme Weather Alerts from Open-Meteo
         async function getExtremeWeatherAlerts(lat, lon) {
             const ALERTS_API_URL = `https://api.open-meteo.com/v1/alerts?latitude=${lat}&longitude=${lon}`;
@@ -179,7 +188,7 @@
         }
 
         // Fetch alerts for the USA center at startup
-        getWeatherAlerts(39.8283, -98.5795);
+        getExtremeWeatherAlerts(39.8283, -98.5795);
 
         // Layer Control
         var baseMaps = {
@@ -187,7 +196,7 @@
             "Grayscale Terrain": esriGrayTopo
         };
 
-         var overlayMaps = {
+        var overlayMaps = {
             "Temperature": temperatureLayer,
             "Cloud Coverage": cloudCoverageLayer,
             "Precipitation": precipitationLayer,
@@ -195,7 +204,7 @@
             "Storm Tracker": stormTrackerLayer
         };
 
-        L.control.layers(baseMaps,overlayMaps).addTo(map);
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
 
         // Add Search Bar (Geocoder)
         var geocoder = L.Control.geocoder({
@@ -217,6 +226,7 @@
     </script>
 </body>
 </html>
+
 
 
 
