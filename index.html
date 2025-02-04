@@ -43,7 +43,6 @@
             max-width: 250px;
             line-height: 1.6;
         }
-
     </style>
     <title>Global Weather Tracker</title>
 </head>
@@ -69,10 +68,10 @@
             maxZoom: 19
         });
 
-        // OpenWeatherMap API Key
-        const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
+        // WeatherAPI Key
+        const API_KEY = "17d4a674ff854b26959191939250402";
 
-        // Weather Control (To Update Weather Info)
+        // Weather Control
         var weatherControl = L.control({ position: "topleft" });
         weatherControl.onAdd = function () {
             this._div = L.DomUtil.create("div", "weather-info");
@@ -81,18 +80,18 @@
         };
         weatherControl.addTo(map);
 
-        // Function to Fetch Weather Data
+        // Fetch Weather Data from WeatherAPI
         async function fetchWeatherData(lat, lon) {
-            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+            const WEATHER_API_URL = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${lat},${lon}&aqi=no`;
 
             try {
                 const response = await fetch(WEATHER_API_URL);
                 const weatherData = await response.json();
-                
+
                 if (response.ok) {
                     displayWeatherData(weatherData);
                 } else {
-                    console.error("Error fetching weather data:", weatherData.message);
+                    console.error("Error fetching weather data:", weatherData.error.message);
                     weatherControl._div.innerHTML = "Weather data not available.";
                 }
             } catch (error) {
@@ -101,126 +100,69 @@
             }
         }
 
-        // Function to Display Weather on the Map
+        // Display Weather Data
         function displayWeatherData(weatherData) {
             weatherControl._div.innerHTML = `
-                <b>Weather in ${weatherData.name}:</b><br>
-                Temperature: ${weatherData.main.temp}°C<br>
-                Feels Like: ${weatherData.main.feels_like}°C<br>
-                Condition: ${weatherData.weather[0].description}<br>
-                Humidity: ${weatherData.main.humidity}%<br>
-                Wind Speed: ${weatherData.wind.speed} m/s
+                <b>Weather in ${weatherData.location.name}:</b><br>
+                Temperature: ${weatherData.current.temp_c}°C<br>
+                Feels Like: ${weatherData.current.feelslike_c}°C<br>
+                Condition: ${weatherData.current.condition.text}<br>
+                Humidity: ${weatherData.current.humidity}%<br>
+                Wind Speed: ${weatherData.current.wind_kph} km/h
             `;
         }
-        // --- WEATHER ALERT FUNCTION ---
-        async function getWeatherAlerts(lat, lon) {
-            const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&exclude=current,minutely,hourly,daily`;
 
-        
+        // Fetch Weather Alerts (WeatherAPI supports alerts in premium plan)
+        async function getWeatherAlerts(lat, lon) {
+            const ALERTS_API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${lat},${lon}&alerts=yes`;
+
             try {
-                const response = await fetch(url);
+                const response = await fetch(ALERTS_API_URL);
                 const data = await response.json();
-        
-                if (data.alerts && data.alerts.length > 0) {
-                    displayAlerts(data.alerts, lat, lon);
+
+                if (data.alerts && data.alerts.alert.length > 0) {
+                    displayAlerts(data.alerts.alert, lat, lon);
                 } else {
                     console.log("No active weather alerts.");
-                    weatherControl._div.innerHTML = "No weather alerts at this time.";
+                    weatherControl._div.innerHTML += "<br>No weather alerts at this time.";
                 }
             } catch (error) {
                 console.error("Error fetching weather alerts:", error);
             }
         }
-        
-        // --- DISPLAY ALERTS FUNCTION ---
+
+        // Display Alerts on the Map
         function displayAlerts(alerts, lat, lon) {
             alerts.forEach(alert => {
                 const alertPopup = `
                     <b>${alert.event}</b><br>
                     <b>Severity:</b> ${alert.severity}<br>
-                    <b>Start:</b> ${new Date(alert.start * 1000).toLocaleString()}<br>
-                    <b>End:</b> ${new Date(alert.end * 1000).toLocaleString()}<br>
-                    <b>Description:</b> ${alert.description}
+                    <b>Start:</b> ${alert.effective}<br>
+                    <b>End:</b> ${alert.expires}<br>
+                    <b>Description:</b> ${alert.desc}
                 `;
-        
-                L.marker([lat, lon])  // Use correct alert location
+
+                L.marker([lat, lon])
                     .addTo(map)
                     .bindPopup(alertPopup)
                     .openPopup();
             });
         }
-        
+
         // Fetch alerts for the USA center at startup
         getWeatherAlerts(39.8283, -98.5795);
 
-        // --- WEATHER OVERLAY LAYERS ---
-        var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
-            attribution: 'Weather data &copy; OpenWeatherMap',
-            maxZoom: 19
-        });
-
-        var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
-            attribution: 'Cloud data © OpenWeatherMap',
-            maxZoom: 19
-        });
-
-        var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
-            attribution: 'Precipitation data © OpenWeatherMap',
-            maxZoom: 19
-        });
-
-        var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
-            attribution: 'Wind data © OpenWeatherMap',
-            maxZoom: 19
-        });
-
-        var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
-            attribution: 'Storm data © OpenWeatherMap',
-            maxZoom: 19,
-            opacity: 0.7
-        });
-
-        // --- LAYER CONTROL ---
+        // Layer Control
         var baseMaps = {
-            "Satellite (OpenStreetMap)": darkMap,
-            "Grayscale Terrain (Esri)": esriGrayTopo
+            "Dark Mode": darkMap,
+            "Grayscale Terrain": esriGrayTopo
         };
 
-        var overlayMaps = {
-            "Temperature": temperatureLayer,
-            "Cloud Coverage": cloudCoverageLayer,
-            "Precipitation": precipitationLayer,
-            "Wind": windLayer,
-            "Storm Tracker": stormTrackerLayer
-        };
-
-        L.control.layers(baseMaps, overlayMaps).addTo(map);
-
-        // --- SHOW LEGEND ---
-        var legend = L.control({ position: 'bottomright' });
-        legend.onAdd = function () {
-            var div = L.DomUtil.create('div', 'info legend');
-            div.innerHTML += "<b>Temperature</b><br>";
-            div.innerHTML += '<div style="background: linear-gradient(to right, #0000FF, #00FFFF, #00FF00, #FFFF00, #FF0000); height: 10px; width: 100%;"></div>';
-            div.innerHTML += '<small>-20°C</small> <small style="float: right;">40°C</small>';
-            return div;
-        };
-        // Function to show/hide the legend based on layer activation
-        map.on('overlayadd', function (eventLayer) {
-            if (eventLayer.name === "Temperature") {
-                legend.addTo(map);
-            }
-        });
-        
-        map.on('overlayremove', function (eventLayer) {
-            if (eventLayer.name === "Temperature") {
-                map.removeControl(legend);
-            }
-        });
+        L.control.layers(baseMaps).addTo(map);
 
         // Add Search Bar (Geocoder)
         var geocoder = L.Control.geocoder({
-            position: "topleft",
+            position: "topright",
             collapsed: false,
             placeholder: "Search for a place...",
             defaultMarkGeocode: false
@@ -228,13 +170,13 @@
 
         // When a location is selected
         geocoder.on('markgeocode', function(e) {
-            var latlng = e.geocode.center; // Get lat/lon of searched place
-            map.setView(latlng, 10); // Zoom to location
+            var latlng = e.geocode.center;
+            map.setView(latlng, 10);
 
-            // Fetch Weather Data for Searched Location
             fetchWeatherData(latlng.lat, latlng.lng);
             getWeatherAlerts(latlng.lat, latlng.lng);
         });
+
     </script>
 </body>
 </html>
