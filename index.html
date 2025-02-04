@@ -70,7 +70,7 @@
         const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
 
         // Weather Control (To Update Weather Info)
-        var weatherControl = L.control({ position: "topright" });
+        var weatherControl = L.control({ position: "topleft" });
         weatherControl.onAdd = function () {
             this._div = L.DomUtil.create("div", "weather-info");
             this._div.innerHTML = "Search for a location to see weather.";
@@ -202,8 +202,18 @@
             div.innerHTML += '<small>-20°C</small> <small style="float: right;">40°C</small>';
             return div;
         };
-        legend.addTo(map);
-        legend.getContainer().style.display = 'none';
+        // Function to show/hide the legend based on layer activation
+        map.on('overlayadd', function (eventLayer) {
+            if (eventLayer.name === "Temperature") {
+                legend.addTo(map);
+            }
+        });
+        
+        map.on('overlayremove', function (eventLayer) {
+            if (eventLayer.name === "Temperature") {
+                map.removeControl(legend);
+            }
+        });
 
         // Add Search Bar (Geocoder)
         var geocoder = L.Control.geocoder({
