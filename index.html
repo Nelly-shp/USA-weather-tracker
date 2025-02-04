@@ -155,11 +155,13 @@
 
         // Fetch Extreme Weather Alerts from Open-Meteo
         async function getExtremeWeatherAlerts(lat, lon) {
-            const ALERTS_API_URL = `https://api.open-meteo.com/v1/alerts?latitude=${lat}&longitude=${lon}`;
-
+            const ALERTS_API_URL = `https://api.open-meteo.com/v1/alerts?latitude=40.7128&longitude=-74.0060`; // For testing, use a global or dynamic location
             try {
                 const response = await fetch(ALERTS_API_URL);
                 const data = await response.json();
+
+                // Log the response data to see what is returned
+                console.log(data);
 
                 if (data.alerts && data.alerts.length > 0) {
                     displayExtremeWeatherAlerts(data.alerts, lat, lon);
@@ -185,7 +187,7 @@
                     <b>Description:</b> ${alert.description}
                 `;
 
-                L.marker([lat, lon])
+                L.marker([alert.latitude, alert.longitude])  // Use the actual lat, lon from the alert
                     .addTo(map)
                     .bindPopup(alertPopup)
                     .openPopup();
