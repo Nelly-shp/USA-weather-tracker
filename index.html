@@ -136,11 +136,11 @@
                     maxZoom: 19
                 });
 
-                 var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}&opacity=0.8`, {
+                 var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
                     attribution: 'Storm data © OpenWeatherMap',
                     maxZoom: 19,
-                    opacity: 0.7
-        });
+                    
+                });
         
         // Fetch Weather Alerts (WeatherAPI supports alerts in premium plan)
         async function getWeatherAlerts(lat, lon) {
