@@ -111,7 +111,6 @@
                 Condition: ${weatherData.current.condition.text}<br>
                 Humidity: ${weatherData.current.humidity}%<br>
                 Wind Speed: ${weatherData.current.wind_kph} km/h
-                UV index: ${weatherData.current.uv}
             `;
         }
         
@@ -192,7 +191,8 @@
             "Temperature": temperatureLayer,
             "Cloud Coverage": cloudCoverageLayer,
             "Precipitation": precipitationLayer,
-            "Wind": windLayer
+            "Wind": windLayer,
+            "Storm Tracker": stormTrackerLayer
         };
 
         L.control.layers(baseMaps,overlayMaps).addTo(map);
