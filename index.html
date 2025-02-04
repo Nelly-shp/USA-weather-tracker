@@ -70,6 +70,8 @@
 
         // WeatherAPI Key
         const API_KEY = "17d4a674ff854b26959191939250402";
+        // openWeatherMap key
+        const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
 
         // Weather Control
         var weatherControl = L.control({ position: "topleft" });
@@ -109,9 +111,31 @@
                 Condition: ${weatherData.current.condition.text}<br>
                 Humidity: ${weatherData.current.humidity}%<br>
                 Wind Speed: ${weatherData.current.wind_kph} km/h
+                UV index: ${weatherData.current.uv}
             `;
         }
-
+        
+        // Weather Overlays from OpenWeatherMap
+                var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+                    attribution: 'Weather data &copy; OpenWeatherMap',
+                    maxZoom: 19
+                });
+        
+                var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+                    attribution: 'Cloud data © OpenWeatherMap',
+                    maxZoom: 19
+                });
+        
+                var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+                    attribution: 'Precipitation data © OpenWeatherMap',
+                    maxZoom: 19
+                });
+        
+                var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+                    attribution: 'Wind data © OpenWeatherMap',
+                    maxZoom: 19
+                });
+        
         // Fetch Weather Alerts (WeatherAPI supports alerts in premium plan)
         async function getWeatherAlerts(lat, lon) {
             const ALERTS_API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${lat},${lon}&alerts=yes`;
@@ -158,7 +182,14 @@
             "Grayscale Terrain": esriGrayTopo
         };
 
-        L.control.layers(baseMaps).addTo(map);
+         var overlayMaps = {
+            "Temperature": temperatureLayer,
+            "Cloud Coverage": cloudCoverageLayer,
+            "Precipitation": precipitationLayer,
+            "Wind": windLayer
+        };
+
+        L.control.layers(baseMaps,overlayMaps).addTo(map);
 
         // Add Search Bar (Geocoder)
         var geocoder = L.Control.geocoder({
