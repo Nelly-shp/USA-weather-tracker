@@ -36,11 +36,14 @@
             font-size: 14px;
             font-weight: bold;
             color: #333;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            max-width: 250px;
+            line-height: 1.6;
         }
+
     </style>
     <title>Global Weather Tracker</title>
 </head>
@@ -57,8 +60,8 @@
         var map = L.map('map').setView([39.8283, -98.5795], 4); // Centered on USA
 
         // Base Map Layer
-        var satelliteMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
+        var darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://carto.com/">Carto</a> contributors'
         }).addTo(map);
 
         var esriGrayTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
@@ -217,7 +220,10 @@
 
         // Add Search Bar (Geocoder)
         var geocoder = L.Control.geocoder({
-            position: "topleft",
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index 1500;
             collapsed: false,
             placeholder: "Search for a place...",
             defaultMarkGeocode: false
