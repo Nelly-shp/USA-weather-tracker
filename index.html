@@ -141,34 +141,34 @@
                     
                 });
         
-        // Fetch Weather Alerts (WeatherAPI supports alerts in premium plan)
-        async function getWeatherAlerts(lat, lon) {
-            const ALERTS_API_URL = `https://api.weatherapi.com/v1/Forecast.json?key=${WEATHERAPI_KEY}&q=${lat},${lon}&alerts=yes`;
+        // Fetch Extreme Weather Alerts from Open-Meteo
+        async function getExtremeWeatherAlerts(lat, lon) {
+            const ALERTS_API_URL = `https://api.open-meteo.com/v1/alerts?latitude=${lat}&longitude=${lon}`;
 
             try {
                 const response = await fetch(ALERTS_API_URL);
                 const data = await response.json();
 
-                if (data.alerts && data.alerts.alert.length > 0) {
-                    displayAlerts(data.alerts.alert, lat, lon);
+                if (data.alerts && data.alerts.length > 0) {
+                    displayExtremeWeatherAlerts(data.alerts, lat, lon);
                 } else {
-                    console.log("No active weather alerts.");
-                    weatherControl._div.innerHTML += "<br>No weather alerts at this time.";
+                    console.log("No extreme weather alerts.");
+                    weatherControl._div.innerHTML += "<br>No extreme weather alerts at this time.";
                 }
             } catch (error) {
-                console.error("Error fetching weather alerts:", error);
+                console.error("Error fetching extreme weather alerts:", error);
             }
         }
 
-        // Display Alerts on the Map
-        function displayAlerts(alerts, lat, lon) {
+        // Display Extreme Weather Alerts on the Map
+        function displayExtremeWeatherAlerts(alerts, lat, lon) {
             alerts.forEach(alert => {
                 const alertPopup = `
                     <b>${alert.event}</b><br>
                     <b>Severity:</b> ${alert.severity}<br>
                     <b>Start:</b> ${alert.effective}<br>
                     <b>End:</b> ${alert.expires}<br>
-                    <b>Description:</b> ${alert.desc}
+                    <b>Description:</b> ${alert.description}
                 `;
 
                 L.marker([lat, lon])
@@ -211,7 +211,7 @@
             map.setView(latlng, 10);
 
             fetchWeatherData(latlng.lat, latlng.lng);
-            getWeatherAlerts(latlng.lat, latlng.lng);
+            getExtremeWeatherAlerts(latlng.lat, latlng.lng);
         });
 
     </script>
