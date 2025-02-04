@@ -114,7 +114,7 @@
         }
         // --- WEATHER ALERT FUNCTION ---
         async function getWeatherAlerts(lat, lon) {
-            const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&exclude=current,minutely,hourly,daily,alerts`;
+            const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&exclude=current,minutely,hourly,daily`;
 
         
             try {
@@ -154,27 +154,27 @@
         getWeatherAlerts(39.8283, -98.5795);
 
         // --- WEATHER OVERLAY LAYERS ---
-        var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+        var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+        var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
             attribution: 'Cloud data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+        var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
             attribution: 'Precipitation data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+        var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
             attribution: 'Wind data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${API_KEY}`, {
+        var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${API_KEY}&opacity=0.8`, {
             attribution: 'Storm data © OpenWeatherMap',
             maxZoom: 19,
             opacity: 0.7
@@ -182,7 +182,7 @@
 
         // --- LAYER CONTROL ---
         var baseMaps = {
-            "Satellite (OpenStreetMap)": darkmap,
+            "Satellite (OpenStreetMap)": darkMap,
             "Grayscale Terrain (Esri)": esriGrayTopo
         };
 
@@ -220,7 +220,7 @@
 
         // Add Search Bar (Geocoder)
         var geocoder = L.Control.geocoder({
-            position: "topright",
+            position: "topleft",
             collapsed: false,
             placeholder: "Search for a place...",
             defaultMarkGeocode: false
