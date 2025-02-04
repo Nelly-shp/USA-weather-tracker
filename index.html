@@ -143,7 +143,7 @@
         
         // Fetch Weather Alerts (WeatherAPI supports alerts in premium plan)
         async function getWeatherAlerts(lat, lon) {
-            const ALERTS_API_URL = `https://api.weatherapi.com/v1/alerts.json?key=${WEATHERAPI_KEY}&q=${lat},${lon}`;
+            const ALERTS_API_URL = `https://api.weatherapi.com/v1/Forecast.json?key=${WEATHERAPI_KEY}&q=${lat},${lon}&alerts=yes`;
 
             try {
                 const response = await fetch(ALERTS_API_URL);
