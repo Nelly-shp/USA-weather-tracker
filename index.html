@@ -68,10 +68,9 @@
             maxZoom: 19
         });
 
-        // WeatherAPI Key
-        const API_KEY = "17d4a674ff854b26959191939250402";
-        // openWeatherMap key
-        const API_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
+        //API Key
+        const WEATHERAPI_KEY = "17d4a674ff854b26959191939250402";
+        const OPENWEATHER_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
 
         // Weather Control
         var weatherControl = L.control({ position: "topleft" });
@@ -84,7 +83,7 @@
 
         // Fetch Weather Data from WeatherAPI
         async function fetchWeatherData(lat, lon) {
-            const WEATHER_API_URL = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${lat},${lon}&aqi=no`;
+            const WEATHER_API_URL = `https://api.weatherapi.com/v1/current.json?key=${WEATHERAPI_KEY}&q=${lat},${lon}&aqi=no`;
 
             try {
                 const response = await fetch(WEATHER_API_URL);
@@ -138,7 +137,7 @@
         
         // Fetch Weather Alerts (WeatherAPI supports alerts in premium plan)
         async function getWeatherAlerts(lat, lon) {
-            const ALERTS_API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${lat},${lon}&alerts=yes`;
+            const ALERTS_API_URL = `https://api.weatherapi.com/v1/forecast.json?key=${WEATHERAPI_KEY}&q=${lat},${lon}&alerts=yes`;
 
             try {
                 const response = await fetch(ALERTS_API_URL);
