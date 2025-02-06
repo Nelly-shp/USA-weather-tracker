@@ -80,7 +80,8 @@
             justify-content: center;
             width: 100%;
             height: 100%;
-            font-size: 18px;
+            font-size: 12px;
+            content: "🔍";
         }
         
         /* Expand the search bar when hovered or clicked */
@@ -88,6 +89,11 @@
             width: 250px; /* Adjust width to match expanded layers control */
             height: auto;
             padding: 5px;
+        }
+
+        /* Hide search icon when expanded */
+        .leaflet-control-geocoder.expanded a {
+            content: "";
         }
 
 
@@ -268,14 +274,19 @@
         // Select the geocoder control
         var geocoderControl = document.querySelector(".leaflet-control-geocoder");
         
-        // Expand search bar on hover
-        geocoderControl.addEventListener("mouseenter", function () {
-            this.classList.add("expanded");
+        const searchControl = document.querySelector(".leaflet-control-geocoder");
+
+        // Toggle expansion on click
+        searchControl.addEventListener("click", function (event) {
+            event.stopPropagation(); // Prevent immediate closing
+            this.classList.toggle("expanded");
         });
         
-        // Collapse search bar when mouse leaves (like layers control)
-        geocoderControl.addEventListener("mouseleave", function () {
-            this.classList.remove("expanded");
+        // Close search bar when clicking outside
+        document.addEventListener("click", function (event) {
+            if (!searchControl.contains(event.target)) {
+                searchControl.classList.remove("expanded");
+            }
         });
 
         // When a location is selected
