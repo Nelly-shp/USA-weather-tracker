@@ -62,7 +62,7 @@
             overflow: hidden;
         }
 
-        /* Make the geocoder icon the same size as the layers control */
+        /* Style the collapsed geocoder to match the layers control */
         .leaflet-control-geocoder {
             width: 40px;
             height: 40px;
@@ -71,30 +71,32 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease-in-out;
             overflow: hidden;
-        }
-        
-        /* Center the search icon inside the geocoder */
-        .leaflet-control-geocoder a {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
-            height: 100%;
-            font-size: 12px;
-            content: "🔍";
         }
         
-        /* Expand the search bar when hovered or clicked */
+        /* Show search icon when collapsed */
+        .leaflet-control-geocoder::before {
+            content: "🔍"; /* Unicode search icon */
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+        
+        /* Expand the search bar on hover */
         .leaflet-control-geocoder.expanded {
-            width: 250px; /* Adjust width to match expanded layers control */
+            width: 250px; /* Adjust width to match layers control */
             height: auto;
             padding: 5px;
+            overflow: visible;
         }
-
+        
         /* Hide search icon when expanded */
-        .leaflet-control-geocoder.expanded a {
+        .leaflet-control-geocoder.expanded::before {
             content: "";
         }
+
 
 
     </style>
