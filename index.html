@@ -15,32 +15,34 @@
             height: 100%;
             padding: 0;
             margin: 0;
+            touch-action: none; //improves mobile touch 
         }
 
         #title {
             position: absolute;
-            top: 10px;
+            top: 5px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
             background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 8px;
-            font-size: 18px;
+            transform: translateX(-50%);
+            font-size: 16px;
             font-weight: bold;
             color: #333;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .weather-info {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             color: #333;
             background: rgba(255, 255, 255, 0.95);
-            padding: 12px;
+            padding: 10px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            max-width: 250px;
+            max-width: 200px;
             line-height: 1.6;
         }
 
@@ -53,6 +55,13 @@
         .leaflet-control-layers {
             z-index: 1020;
         }
+
+        .leaflet-control-layers {
+            font-size: 14px;
+            max-width: 200px;
+            overflow: hidden;
+        }
+
     </style>
     <title>Global Weather Tracker</title>
 </head>
@@ -67,6 +76,11 @@
     <script>
         // Initialize Map
         var map = L.map('map').setView([39.8283, -98.5795], 4); // Centered on USA
+
+        if (window.innerWidth < 600) {
+            map.setView([39.8283, -98.5795], 3); // Set a more zoomed-out view for mobile
+        }
+
 
         // Base Map Layer
         var darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -217,7 +231,7 @@
         // Add Search Bar (Geocoder)
         var geocoder = L.Control.geocoder({
             position: "topright",
-            collapsed: false,
+            collapsed: true,
             placeholder: "Search for a place...",
             defaultMarkGeocode: false
         }).addTo(map);
