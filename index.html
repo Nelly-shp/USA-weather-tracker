@@ -48,12 +48,12 @@
 
         /* Adjust search bar visibility */
         .leaflet-control-geocoder {
-            z-index: 1010;
+            z-index: 990;
         }
 
         /* Ensure layers tab is visible */
         .leaflet-control-layers {
-            z-index: 1020;
+            z-index: 1000;
         }
 
         .leaflet-control-layers {
@@ -64,8 +64,8 @@
 
         /* Style the collapsed geocoder to match the layers control */
         .leaflet-control-geocoder {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -80,7 +80,7 @@
         .leaflet-control-geocoder::before {
             content: "🔍"; /* Unicode search icon */
             font-size: 18px;
-            color: #333;
+            color: #ccc;
             text-align: center;
         }
         
