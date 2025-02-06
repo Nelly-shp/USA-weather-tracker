@@ -96,7 +96,11 @@
             padding: 5px;
             overflow: visible;
         }
-        
+
+        /* Hide search icon when expanded */
+        .leaflet-control-geocoder.expanded::before {
+            content: "";
+        }
         
 
         /* Adjust the input field inside the geocoder */
@@ -121,6 +125,7 @@
             max-height: 300px;
             overflow-y: auto;
             background: white;
+            border-radius: 8px;
         }
         
         /* Style the search suggestions */
