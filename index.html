@@ -62,6 +62,32 @@
             overflow: hidden;
         }
 
+        /* Make the search icon and layer control button the same size */
+        .leaflet-control-geocoder, .leaflet-control-layers-toggle {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .leaflet-control-geocoder-icon {
+            font-size: 20px;
+            color: #333;
+        }
+
+        /* Center the search icon */
+        .leaflet-control-geocoder a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-size: 18px;
+        }
+
+
     </style>
     <title>Global Weather Tracker</title>
 </head>
