@@ -74,6 +74,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
         
         /* Show search icon when collapsed */
@@ -81,7 +82,11 @@
             content: "🔍"; /* Unicode search icon */
             font-size: 18px;
             color: #888;
-            text-align: center;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
         }
         
         /* Expand the search bar on hover */
