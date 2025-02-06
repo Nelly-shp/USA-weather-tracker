@@ -303,37 +303,36 @@
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-        // Add Search Bar (Geocoder)
+        // Initialize Geocoder Control with expansion on click
         var geocoder = L.Control.geocoder({
             position: "topright",
-            collapsed: true,
-            placeholder: "Search for a place...",
-            defaultMarkGeocode: true
+            collapsed: true, // Default to collapsed
+            placeholder: "Search for a place...", // Placeholder text
+            defaultMarkGeocode: true // Automatically mark geocode on selection
         }).addTo(map);
-
+        
         // Select the geocoder control
         var geocoderControl = document.querySelector(".leaflet-control-geocoder");
         
-        const searchControl = document.querySelector(".leaflet-control-geocoder");
-
-        // Toggle expansion on click
-        searchControl.addEventListener("click", function (event) {
+        // Toggle expansion of the search bar on click
+        geocoderControl.addEventListener("click", function(event) {
             event.stopPropagation(); // Prevent immediate closing
             this.classList.toggle("expanded");
         });
         
-        // Close search bar when clicking outside
-        document.addEventListener("click", function (event) {
-            if (!searchControl.contains(event.target)) {
-                searchControl.classList.remove("expanded");
+        // Close the search bar when clicking outside of the geocoder
+        document.addEventListener("click", function(event) {
+            if (!geocoderControl.contains(event.target)) {
+                geocoderControl.classList.remove("expanded");
             }
         });
-
-        // When a location is selected
+        
+        // When a location is selected, zoom to the location and fetch data
         geocoder.on('markgeocode', function(e) {
             var latlng = e.geocode.center;
-            map.setView(latlng, 10);
-
+            map.setView(latlng, 10); // Zoom to the location
+        
+            // Fetch weather and extreme weather alerts for the selected location
             fetchWeatherData(latlng.lat, latlng.lng);
             getExtremeWeatherAlerts(latlng.lat, latlng.lng);
         });
