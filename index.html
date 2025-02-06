@@ -62,17 +62,18 @@
             overflow: hidden;
         }
 
-        /* Make the search icon and layer control button the same size */
-        .leaflet-control-geocoder, .leaflet-control-layers-toggle {
+        /* Make the geocoder icon the same size as the layers control */
+        .leaflet-control-geocoder {
             width: 40px;
             height: 40px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
         }
-
-
-        /* Center the search icon */
+        
+        /* Center the search icon inside the geocoder */
         .leaflet-control-geocoder a {
             display: flex;
             align-items: center;
@@ -80,6 +81,13 @@
             width: 100%;
             height: 100%;
             font-size: 18px;
+        }
+        
+        /* Expand the search bar when hovered or clicked */
+        .leaflet-control-geocoder.expanded {
+            width: 250px; /* Adjust width to match expanded layers control */
+            height: auto;
+            padding: 5px;
         }
 
 
@@ -254,8 +262,21 @@
             position: "topright",
             collapsed: true,
             placeholder: "Search for a place...",
-            defaultMarkGeocode: false
+            defaultMarkGeocode: true
         }).addTo(map);
+
+        // Select the geocoder control
+        var geocoderControl = document.querySelector(".leaflet-control-geocoder");
+        
+        // Expand search bar on hover
+        geocoderControl.addEventListener("mouseenter", function () {
+            this.classList.add("expanded");
+        });
+        
+        // Collapse search bar when mouse leaves (like layers control)
+        geocoderControl.addEventListener("mouseleave", function () {
+            this.classList.remove("expanded");
+        });
 
         // When a location is selected
         geocoder.on('markgeocode', function(e) {
