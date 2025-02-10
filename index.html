@@ -15,7 +15,7 @@
             height: 100%;
             padding: 0;
             margin: 0;
-            touch-action: none; //improves mobile touch 
+            touch-action: none;
         }
 
         #title {
@@ -27,7 +27,6 @@
             background-color: rgba(255, 255, 255, 0.8);
             padding: 8px 16px;
             border-radius: 8px;
-            transform: translateX(-50%);
             font-size: 16px;
             font-weight: bold;
             color: #333;
@@ -46,107 +45,17 @@
             line-height: 1.6;
         }
 
-        /* Adjust search bar visibility */
-        .leaflet-control-geocoder {
-            z-index: 900;
-        }
-
-        /* Ensure layers tab is visible */
         .leaflet-control-layers {
-            position: absolute
-            top: 70px
-            right: 5px
+            position: absolute !important;
+            top: 60px !important;
+            right: 5px !important;
             z-index: 900;
-        }
-
-        .leaflet-control-layers {
-            font-size: 14px;
-            max-width: 200px;
-            overflow: hidden;
-        }
-
-        /* Style the collapsed geocoder to match the layers control */
-        .leaflet-control-geocoder {
-            width: 40px;
-            height: 40px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease-in-out;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            position: absolute;
-            top: 20px; /* Keep it near the top */
-            right: 5px;
-            z-index: 900;
-            padding: 5px;
-        }
-        
-        /* Show search icon when collapsed */
-        .leaflet-control-geocoder::before {
-            content: "🔍"; /* Unicode search icon */
-            font-size: 18px;
-            color: #888;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-        }
-        
-        /* Expand the search bar on hover */
-        .leaflet-control-geocoder.expanded {
-            width: 250px; /* Adjust width to match layers control */
-            height: auto;
-            padding: 5px;
-            overflow: visible;
-        }
-
-        /* Hide search icon when expanded */
-        .leaflet-control-geocoder.expanded::before {
-            content: "";
-        }
-        
-
-        /* Adjust the input field inside the geocoder */
-        .leaflet-control-geocoder input {
-            width: 100%;
-            height: 35px;
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            outline: none;
-        }
-        
-        /* Ensure that autocomplete results are correctly aligned */
-        .leaflet-control-geocoder.leaflet-bar.leaflet-control-expanded .leaflet-control-geocoder-form {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            max-height: 300px;
-            overflow-y: auto;
             background: white;
             border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 5px;
+            max-width: 200px;
         }
-        
-        /* Style the search suggestions */
-        .leaflet-control-geocoder.leaflet-bar .leaflet-control-geocoder-form .leaflet-control-geocoder-result {
-            padding: 8px;
-            cursor: pointer;
-        }
-        
-        .leaflet-control-geocoder.leaflet-bar .leaflet-control-geocoder-form .leaflet-control-geocoder-result:hover {
-            background-color: #f0f0f0;
-        }
-
-
     </style>
     <title>Global Weather Tracker</title>
 </head>
@@ -159,15 +68,12 @@
     <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
 
     <script>
-        // Initialize Map
-        var map = L.map('map').setView([39.8283, -98.5795], 4); // Centered on USA
+        var map = L.map('map').setView([39.8283, -98.5795], 4);
 
         if (window.innerWidth < 600) {
-            map.setView([39.8283, -98.5795], 3); // Set a more zoomed-out view for mobile
+            map.setView([39.8283, -98.5795], 3);
         }
 
-
-        // Base Map Layer
         var darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://carto.com/">Carto</a> contributors'
         }).addTo(map);
@@ -177,126 +83,44 @@
             maxZoom: 19
         });
 
-        //API Key
-        const WEATHERAPI_KEY = "17d4a674ff854b26959191939250402";
-        const OPENWEATHER_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
-
-        // Weather Control
-        var weatherControl = L.control({ position: "topleft" });
-        weatherControl.onAdd = function () {
-            this._div = L.DomUtil.create("div", "weather-info");
-            this._div.innerHTML = "Search for a location to see weather.";
-            return this._div;
-        };
-        weatherControl.addTo(map);
-
-        // Fetch Weather Data from WeatherAPI
-        async function fetchWeatherData(lat, lon) {
-            const WEATHER_API_URL = `https://api.weatherapi.com/v1/current.json?key=${WEATHERAPI_KEY}&q=${lat},${lon}&aqi=no`;
-
-            try {
-                const response = await fetch(WEATHER_API_URL);
-                const weatherData = await response.json();
-
-                if (response.ok) {
-                    displayWeatherData(weatherData);
-                } else {
-                    console.error("Error fetching weather data:", weatherData.error.message);
-                    weatherControl._div.innerHTML = "Weather data not available.";
-                }
-            } catch (error) {
-                console.error("Network error:", error);
-                weatherControl._div.innerHTML = "Unable to fetch weather.";
-            }
-        }
-
-        // Display Weather Data
-        function displayWeatherData(weatherData) {
-            weatherControl._div.innerHTML = `
-                <b>Weather in ${weatherData.location.name}:</b><br>
-                Temperature: ${weatherData.current.temp_c}°C<br>
-                Feels Like: ${weatherData.current.feelslike_c}°C<br>
-                UV index: ${weatherData.current.uv}<br>
-                Condition: ${weatherData.current.condition.text}<br>
-                Humidity: ${weatherData.current.humidity}%<br>
-                Wind Speed: ${weatherData.current.wind_kph} km/h
-            `;
-        }
-        
-        // Weather Overlays from OpenWeatherMap
-        var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+        var temperatureLayer = L.tileLayer('https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=YOUR_API_KEY', {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+        var cloudCoverageLayer = L.tileLayer('https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=YOUR_API_KEY', {
             attribution: 'Cloud data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+        var precipitationLayer = L.tileLayer('https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=YOUR_API_KEY', {
             attribution: 'Precipitation data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+        var windLayer = L.tileLayer('https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=YOUR_API_KEY', {
             attribution: 'Wind data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`, {
+        var stormTrackerLayer = L.tileLayer('https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=YOUR_API_KEY', {
             attribution: 'Storm data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        // Define the Extreme Weather Alerts Layer Group
         var extremeWeatherAlertsLayer = L.layerGroup().addTo(map);
 
-        // Fetch Extreme Weather Alerts from Open-Meteo
-        async function getExtremeWeatherAlerts(lat, lon) {
-            const ALERTS_API_URL = `https://api.open-meteo.com/v1/alerts?latitude=40.7128&longitude=-74.0060`; // For testing, use a global or dynamic location
-            try {
-                const response = await fetch(ALERTS_API_URL);
-                const data = await response.json();
+        var geocoder = L.Control.geocoder({
+            position: "topright",
+            placeholder: "Search for a place...",
+            defaultMarkGeocode: true
+        }).addTo(map);
 
-                // Log the response data to see what is returned
-                console.log(data);
+        geocoder.on('markgeocode', function(e) {
+            var latlng = e.geocode.center;
+            map.setView(latlng, 10);
+        });
 
-                if (data.alerts && data.alerts.length > 0) {
-                    displayExtremeWeatherAlerts(data.alerts, lat, lon);
-                } else {
-                    console.log("No extreme weather alerts.");
-                    weatherControl._div.innerHTML += "<br>No extreme weather alerts at this time.";
-                }
-            } catch (error) {
-                console.error("Error fetching extreme weather alerts:", error);
-            }
-        }
-
-        // Display Extreme Weather Alerts on the Map
-        function displayExtremeWeatherAlerts(alerts, lat, lon) {
-            extremeWeatherAlertsLayer.clearLayers(); // Clear previous alerts
-            
-            alerts.forEach(alert => {
-                const alertPopup = `
-                    <b>${alert.event}</b><br>
-                    <b>Severity:</b> ${alert.severity}<br>
-                    <b>Start:</b> ${alert.effective}<br>
-                    <b>End:</b> ${alert.expires}<br>
-                    <b>Description:</b> ${alert.description}
-                `;
-
-                L.marker([alert.latitude, alert.longitude])  // Use the actual lat, lon from the alert
-                    .addTo(map)
-                    .bindPopup(alertPopup)
-                    .openPopup();
-            });
-        }
-
-        // Fetch alerts for the USA center at startup
-        getExtremeWeatherAlerts(39.8283, -98.5795);
-
-        // Layer Control
         var baseMaps = {
             "Dark Mode": darkMap,
             "Grayscale Terrain": esriGrayTopo
@@ -312,44 +136,10 @@
         };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
-
-        // Initialize Geocoder Control with expansion on click
-        var geocoder = L.Control.geocoder({
-            position: "topleft",
-            collapsed: true, // Default to collapsed
-            placeholder: "Search for a place...", // Placeholder text
-            defaultMarkGeocode: true // Automatically mark geocode on selection
-        }).addTo(map);
-        
-        // Select the geocoder control
-        var geocoderControl = document.querySelector(".leaflet-control-geocoder");
-        
-        // Toggle expansion of the search bar on click
-        geocoderControl.addEventListener("click", function(event) {
-            event.stopPropagation(); // Prevent immediate closing
-            this.classList.toggle("expanded");
-        });
-        
-        // Close the search bar when clicking outside of the geocoder
-        document.addEventListener("click", function(event) {
-            if (!geocoderControl.contains(event.target)) {
-                geocoderControl.classList.remove("expanded");
-            }
-        });
-        
-        // When a location is selected, zoom to the location and fetch data
-        geocoder.on('markgeocode', function(e) {
-            var latlng = e.geocode.center;
-            map.setView(latlng, 10); // Zoom to the location
-        
-            // Fetch weather and extreme weather alerts for the selected location
-            fetchWeatherData(latlng.lat, latlng.lng);
-            getExtremeWeatherAlerts(latlng.lat, latlng.lng);
-        });
-
     </script>
 </body>
 </html>
+
 
 
 
