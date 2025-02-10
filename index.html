@@ -57,14 +57,33 @@
             max-width: 200px;
         }
 
+        /* Styling the search bar to include an icon */
         .leaflet-control-geocoder {
-            font-size: 14px; /* Adjust font size */
-            width: 200px !important; /* Adjust width */
-            max-width: 200px !important; /* Prevent excessive stretching */
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            padding: 5px;
-        }    
+            position: relative;
+            font-size: 14px;
+            width: 250px !important;
+        }
+        
+        .leaflet-control-geocoder input {
+            height: 30px !important;
+            font-size: 14px !important;
+            padding: 5px 30px 5px 10px !important; /* Space for the icon */
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        .leaflet-control-geocoder::before {
+            content: "🔍"; /* Search icon */
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            pointer-events: none; /* Prevent click on icon */
+            color: #555;
+        }
+
     </style>
     <title>Global Weather Tracker</title>
 </head>
