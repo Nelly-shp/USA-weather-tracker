@@ -116,27 +116,27 @@
         const OpenWeatherMap_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
         const WeatherAPI_KEY = "17d4a674ff854b26959191939250402";
 
-        var temperatureLayer = L.tileLayer('https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=OpenWeatherMap_KEY', {
+        var temperatureLayer = L.tileLayer('https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var cloudCoverageLayer = L.tileLayer('https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=OpenWeatherMap_KEY', {
+        var cloudCoverageLayer = L.tileLayer('https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
             attribution: 'Cloud data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        var precipitationLayer = L.tileLayer('https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=OpenWeatherMap_KEY', {
+        var precipitationLayer = L.tileLayer('https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
             attribution: 'Precipitation data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        var windLayer = L.tileLayer('https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=OpenWeatherMap_KEY', {
+        var windLayer = L.tileLayer('https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
             attribution: 'Wind data © OpenWeatherMap',
             maxZoom: 19
         });
 
-        var stormTrackerLayer = L.tileLayer('https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=OpenWeatherMap_KEY', {
+        var stormTrackerLayer = L.tileLayer('https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
             attribution: 'Storm data © OpenWeatherMap',
             maxZoom: 19
         });
@@ -152,7 +152,12 @@
         geocoder.on('markgeocode', function(e) {
             var latlng = e.geocode.center;
             map.setView(latlng, 10);
+            fetchWeather(latlng.lat, latlng.lng); // Fetch weather for searched location
         });
+
+        });
+
+      
 
         var baseMaps = {
             "Dark Mode": darkMap,
