@@ -59,29 +59,44 @@
 
         /* Styling the search bar to include an icon */
         .leaflet-control-geocoder {
-            position: relative;
-            font-size: 14px;
-            width: 250px !important;
+            width: 40px !important; 
+            height: 40px !important; 
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            cursor: pointer;
         }
+
+        /* Expand on hover or click */
+        .leaflet-control-geocoder.expanded {
+            width: 250px !important;
+            height: auto !important;
+            padding: 5px;
+        }
+
         
         .leaflet-control-geocoder input {
-            height: 30px !important;
-            font-size: 14px !important;
-            padding: 5px 30px 5px 10px !important; /* Space for the icon */
             width: 100%;
-            border-radius: 5px;
+            height: 30px;
+            font-size: 14px;
+            padding: 5px 10px;
             border: 1px solid #ccc;
+            border-radius: 5px;
         }
         
         .leaflet-control-geocoder::before {
-            content: "🔍"; /* Search icon */
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
+            content: "🔍";
             font-size: 16px;
-            pointer-events: none; /* Prevent click on icon */
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 50%;
+            transform: translate(-50%, -50%);
             color: #555;
+            pointer-events: none;
         }
 
         @media (max-width: 600px) {
