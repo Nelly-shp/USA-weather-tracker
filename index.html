@@ -116,28 +116,28 @@
         const OpenWeatherMap_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
         const WeatherAPI_KEY = "17d4a674ff854b26959191939250402";
 
-        var temperatureLayer = L.tileLayer('https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
+       var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
         var cloudCoverageLayer = L.tileLayer('https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
-            attribution: 'Cloud data © OpenWeatherMap',
+            attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
         var precipitationLayer = L.tileLayer('https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
-            attribution: 'Precipitation data © OpenWeatherMap',
+            attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
         var windLayer = L.tileLayer('https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
-            attribution: 'Wind data © OpenWeatherMap',
+            attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
         var stormTrackerLayer = L.tileLayer('https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}', {
-            attribution: 'Storm data © OpenWeatherMap',
+            attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
@@ -183,19 +183,20 @@
         };
         
         weatherControl.update = function (weatherData) {
-            if (weatherData) {
+            if (weatherData && weatherData.location) {  
                 this._div.innerHTML = `
-                    <b>Weather in ${weatherData.name}:</b><br>
-                    Temperature: ${weatherData.main.temp}°C<br>
-                    Feels Like: ${weatherData.main.feels_like}°C<br>
-                    Condition: ${weatherData.weather[0].description}<br>
-                    Humidity: ${weatherData.main.humidity}%<br>
-                    Wind Speed: ${weatherData.wind.speed} m/s
+                    <b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
+                    Temperature: ${weatherData.current.temp_c}°C<br>
+                    Feels Like: ${weatherData.current.feelslike_c}°C<br>
+                    Condition: ${weatherData.current.condition.text}<br>
+                    Humidity: ${weatherData.current.humidity}%<br>
+                    Wind Speed: ${weatherData.current.wind_kph} km/h
                 `;
-            } else {
-                this._div.innerHTML = "Weather info";
+        } else {
+            this._div.innerHTML = "Weather info unavailable";
             }
         };
+
         
         // Add the weather control to the map
         weatherControl.addTo(map);
