@@ -84,12 +84,30 @@
             color: #555;
         }
 
+        @media (max-width: 600px) {
+            #title {
+                font-size: 14px;
+                padding: 5px 10px;
+            }
+        
+            .weather-info {
+                max-width: 180px;
+                font-size: 10px;
+            }
+        
+            .leaflet-control-geocoder {
+                width: 200px !important;
+            }
+        }
+
+
     </style>
     <title>Global Weather Tracker</title>
 </head>
 <body>
     <div id="title">Global Weather Tracker</div>
     <div id="map"></div>
+
 
     <script src="js/leaflet.js"></script>
     <script src="js/L.Control.Locate.min.js"></script>
@@ -162,6 +180,7 @@
             "Grayscale Terrain": esriGrayTopo
         };
 
+        
         var overlayMaps = {
             "Temperature": temperatureLayer,
             "Cloud Coverage": cloudCoverageLayer,
@@ -182,6 +201,7 @@
             return this._div;
         };
         
+        
         weatherControl.update = function (weatherData) {
             if (weatherData && weatherData.location) {  
                 this._div.innerHTML = `
@@ -197,7 +217,7 @@
             }
         };
 
-        
+            
         // Add the weather control to the map
         weatherControl.addTo(map);
         
