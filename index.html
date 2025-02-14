@@ -114,6 +114,55 @@
                 width: 200px !important;
             }
         }
+        /* Sidebar container */
+        #sidebar {
+            position: absolute;
+            left: -250px;  /* Initially hidden */
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background: white;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            transition: left 0.3s ease-in-out;
+            z-index: 1100;
+            padding-top: 10px;
+        }
+        
+        /* Sidebar open */
+        #sidebar.open {
+            left: 0;
+        }
+        
+        /* Sidebar toggle button */
+        #sidebar-toggle {
+            position: absolute;
+            right: -40px;
+            top: 20px;
+            background: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        /* Sidebar content (search bar and layers) */
+        .sidebar-content {
+            padding: 10px;
+        }
+        
+        /* Adjust search bar inside sidebar */
+        .leaflet-control-geocoder {
+            width: 100% !important;
+            height: auto !important;
+            transition: none; /* Remove old transition */
+            margin-bottom: 10px;
+        }
+        
+        /* Adjust layers inside sidebar */
+        .leaflet-control-layers {
+            width: 100%;
+        }
 
 
     </style>
@@ -121,6 +170,16 @@
 </head>
 <body>
     <div id="title">Global Weather Tracker</div>
+    
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div id="sidebar-toggle">☰</div> <!-- Clickable toggle button -->
+        <div class="sidebar-content">
+            <div id="search-bar"></div> <!-- Placeholder for the search bar -->
+            <div id="layer-controls"></div> <!-- Placeholder for layers -->
+        </div>
+    </div>
+
     <div id="map"></div>
 
 
