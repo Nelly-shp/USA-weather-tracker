@@ -218,7 +218,7 @@
                         ${weatherData.forecast.forecastday.map(function(day) {
                             return `
                                 <div class="forecast-day">
-                                    <b>${day.date}</b>: 
+                                    <b>${getDayOfWeek(day.date)}</b>: 
                                     ${day.day.avgtemp_c}°C, ${day.day.condition.text}
                                 </div>
                             `;
@@ -250,6 +250,13 @@
         // Function to display weather data and forecast
         function displayWeatherData(weatherData) {
             weatherControl.update(weatherData);
+        }
+
+        // Function to get the weekday name from a date
+        function getDayOfWeek(dateString) {
+            var date = new Date(dateString);
+            var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            return daysOfWeek[date.getDay()];
         }
 
         // Event listener for map clicks to fetch weather data at clicked location
