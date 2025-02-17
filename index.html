@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/leaflet.css">
     <link rel="stylesheet" href="css/L.Control.Locate.min.css">
     <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
 
     <style>
         html, body, #map {
@@ -40,6 +40,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
             position: absolute;
+            z-index: 1000;
         }
             
         
@@ -96,10 +97,6 @@
         }
 
         .leaflet-control-geocoder {
-            content: "\f002";
-            font-family: "Font Awesome 5 Free"; /* Use Font Awesome font family */
-            font-weight: 900;            /* Bold style for the icon */
-            font-size: 8px;             /* Adjust the icon size */
             color: #555;    
             width: 43px;         /* Initial width of the widget */
             height: 43px; 
