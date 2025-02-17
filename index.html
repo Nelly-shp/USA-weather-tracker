@@ -39,23 +39,42 @@
             background-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
-            position: absolute;
             z-index: 1000;
+            padding: 10px;
         }
-            
         
-        /* Positioning the widgets in the top-right corner */
+        /* Forecast section */
+        .forecast {
+            margin-top: 10px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .forecast-day {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .forecast-day b {
+            font-size: 16px;
+        }
+
         .widget {
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 220px;
+            width: 43px;
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             margin-bottom: 10px;
             z-index: 1000;
             transition: all 0.3s ease-in-out;
+        }
+
+        .widget.open {
+            width: 220px;
         }
 
         .widget-toggle {
@@ -80,7 +99,6 @@
             overflow-y: auto;
         }
 
-        /* Expand widget when clicked */
         .widget.open .widget-content {
             display: block;
         }
@@ -89,7 +107,6 @@
             background-color: #007BFF;
         }
 
-        /* Responsiveness for mobile */
         @media (max-width: 600px) {
             .widget {
                 width: 180px;
@@ -98,11 +115,9 @@
 
         .leaflet-control-geocoder {
             color: #555;    
-            width: 43px;         /* Initial width of the widget */
-            height: 43px; 
+            width: 43px;
+            height: 43px;
         }
-
-            
     </style>
     <title>Global Weather Tracker</title>
 </head>
@@ -111,31 +126,26 @@
     
     <!-- Search Widget -->
     <div id="search-widget" class="widget">
+        <div id="search-toggle" class="widget-toggle">Search</div>
         <div id="search-bar" class="widget-content"></div> <!-- Placeholder for the search bar -->
     </div>
 
     <!-- Layers Widget -->
     <div id="layers-widget" class="widget">
+        <div id="layers-toggle" class="widget-toggle">Layers</div>
         <div id="layer-controls" class="widget-content"></div> <!-- Placeholder for layers -->
     </div>
 
     <div id="map"></div>
        
-
     <script src="js/leaflet.js"></script>
     <script src="js/L.Control.Locate.min.js"></script>
     <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
     <script src="js/geocoder.js"></script>
-    <script src="js/sidebar.js"></script>
-    
     <script>
-        var map = L.map('map',{
-                       zoomControl: false
+        var map = L.map('map', {
+            zoomControl: false
         }).setView([39.8283, -98.5795], 4);
-
-        if (window.innerWidth < 600) {
-            map.setView([39.8283, -98.5795], 3);
-        }
 
         var darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://carto.com/">Carto</a> contributors'
@@ -146,11 +156,8 @@
             maxZoom: 19
         });
 
-        // API Key
         const OpenWeatherMap_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
         const WeatherAPI_KEY = "17d4a674ff854b26959191939250402";
-
-    
 
         var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
             attribution: 'Weather data &copy; OpenWeatherMap',
@@ -177,8 +184,6 @@
             maxZoom: 19
         });
 
-        
-
         var geocoder = L.Control.geocoder({
             position: "topright",
             placeholder: "Search",
@@ -191,6 +196,78 @@
             fetchWeather(latlng.lat, latlng.lng); // Fetch weather for searched location
         });
 
+        // Create weather control
+        var weatherControl = L.control({ position: "bottomleft" });
+        weatherControl.onAdd = function(map) {
+            this._div = L.DomUtil.create("div", "weather-info");
+            this._div.innerHTML = "Click on the map to get weather info";
+            return this._div;
+        };
+
+        weatherControl.update = function(weatherData) {
+            if (weatherData && weatherData.location && weatherData.current) {  
+                this._div.innerHTML = `
+                    <b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
+                    Temperature: ${weatherData.current.temp_c}°C<br>
+                    Feels Like: ${weatherData.current.feelslike_c}°C<br>
+                    Condition: ${weatherData.current.condition.text}<br>
+                    Humidity: ${weatherData.current.humidity}%<br>
+                    Wind Speed: ${weatherData.current.wind_kph} km/h
+                    <div class="forecast">
+                        <b>Forecast:</b><br>
+                        ${weatherData.forecast.forecastday.map(function(day) {
+                            return `
+                                <div class="forecast-day">
+                                    <b>${day.date}</b>: 
+                                    ${day.day.avgtemp_c}°C, ${day.day.condition.text}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } else {
+                this._div.innerHTML = "Search for weather info";
+            }
+        };
+
+        weatherControl.addTo(map);
+
+        // Function to fetch weather data from Weather API
+        function fetchWeather(lat, lon) {
+            var url = `https://api.weatherapi.com/v1/forecast.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&days=7&aqi=no`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeatherData(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching weather data:", error);
+                    weatherControl.update(null);
+                });
+        }
+
+        // Function to display weather data and forecast
+        function displayWeatherData(weatherData) {
+            weatherControl.update(weatherData);
+        }
+
+        // Event listener for map clicks to fetch weather data at clicked location
+        map.on("click", function(e) {
+            fetchWeather(e.latlng.lat, e.latlng.lng);
+        });
+
+        // Widget Toggle
+        const searchToggle = document.getElementById('search-toggle');
+        searchToggle.addEventListener('click', function() {
+            document.getElementById('search-widget').classList.toggle('open');
+        });
+
+        const layersToggle = document.getElementById('layers-toggle');
+        layersToggle.addEventListener('click', function() {
+            document.getElementById('layers-widget').classList.toggle('open');
+        });
+
         var baseMaps = {
             "Dark Mode": darkMap,
             "Grayscale Terrain": esriGrayTopo
@@ -201,84 +278,17 @@
             "Cloud Coverage": cloudCoverageLayer,
             "Precipitation": precipitationLayer,
             "Wind": windLayer,
-            "Storm Tracker": stormTrackerLayer,
+            "Storm Tracker": stormTrackerLayer
         };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
         layerControl.addTo(map);
 
-        // Move layer control into the widget
         document.getElementById("layer-controls").appendChild(layerControl.getContainer());
-        
-
-        // Create a custom control for displaying weather data
-        var weatherControl = L.control({ position: "bottomleft" });
-        
-        weatherControl.onAdd = function (map) {
-            this._div = L.DomUtil.create("div", "weather-info");
-            this.update();
-            return this._div;
-        };
-        
-        weatherControl.update = function (weatherData) {
-            if (weatherData && weatherData.location && weatherData.current) {  
-                this._div.innerHTML = 
-                    `<b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
-                    Temperature: ${weatherData.current.temp_c}°C<br>
-                    Feels Like: ${weatherData.current.feelslike_c}°C<br>
-                    Condition: ${weatherData.current.condition.text}<br>
-                    Humidity: ${weatherData.current.humidity}%<br>
-                    Wind Speed: ${weatherData.current.wind_kph} km/h`;
-            } else {
-                this._div.innerHTML = "Search for weather info";
-            }
-        };
-        
-        // Add the weather control to the map
-        weatherControl.addTo(map);
-        
-        // Function to fetch weather data from Weather API
-        function fetchWeather(lat, lon) {
-            var url = `https://api.weatherapi.com/v1/current.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&aqi=no`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    displayWeatherData(data);
-                })
-                .catch(error => console.error("Error fetching weather data:", error));
-        }
-        
-        // Function to display weather data in the weather control
-        function displayWeatherData(weatherData) {
-            weatherControl.update(weatherData);
-        }
-        
-        // Event listener for map clicks to fetch weather data at clicked location
-        map.on("click", function (e) {
-            fetchWeather(e.latlng.lat, e.latlng.lng);
-        });
-
-
-        // Widget Toggle Functions
-        const searchWidget = document.getElementById('search-widget');
-        const searchToggle = document.getElementById('search-toggle');
-        
-        searchToggle.addEventListener('click', function() {
-            searchWidget.classList.toggle('open');
-        });
-
-        const layersWidget = document.getElementById('layers-widget');
-        const layersToggle = document.getElementById('layers-toggle');
-        
-        layersToggle.addEventListener('click', function() {
-            layersWidget.classList.toggle('open');
-        });
-
-        
     </script>
 </body>
 </html>
+
 
 
 
