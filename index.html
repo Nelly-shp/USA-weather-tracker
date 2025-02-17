@@ -63,6 +63,7 @@
 
         /* Styling the search bar to include an icon */
         .leaflet-control-geocoder {
+            content: "Search";
             width: 45px !important; 
             height: 45px !important; 
             overflow: hidden;
@@ -152,6 +153,9 @@
         /* Sidebar content (search bar and layers) */
         .sidebar-content {
             padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         
         /* Adjust search bar inside sidebar */
@@ -293,7 +297,7 @@
                     Wind Speed: ${weatherData.current.wind_kph} km/h
                 `;
         } else {
-            this._div.innerHTML = "Search for weather info";
+            this._div.innerHTML = "";
             }
         };
 
