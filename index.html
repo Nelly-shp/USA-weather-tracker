@@ -36,7 +36,7 @@
         .weather-info {
             position: absolute;
             top: 20px;
-            right: 40px;
+            right: 20px;
             font-size: 12px;
             font-weight: bold;
             color: #333;
@@ -58,12 +58,11 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             padding: 5px;
-            max-width: 200px;
+            max-width: 250px;
         }
 
         /* Styling the search bar to include an icon */
         .leaflet-control-geocoder {
-            content: "Search";
             width: 45px !important; 
             height: 45px !important; 
             overflow: hidden;
@@ -77,7 +76,7 @@
 
         /* Expand on hover or click */
         .leaflet-control-geocoder.expanded {
-            width: 200px !important;
+            width: 250px !important;
             height: auto !important;
             padding: 5px;
         }
@@ -93,6 +92,7 @@
         }
         
         .leaflet-control-geocoder::before {
+            content: "Search";
             font-size: 16px;
             position: absolute;
             left: 50%;
@@ -128,7 +128,7 @@
             background: white;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
             transition: left 0.3s ease-in-out;
-            z-index: 2000;
+            z-index: 1100;
             padding-top: 10px;
         }
         
@@ -148,17 +148,11 @@
             border-radius: 0 5px 5px 0;
             cursor: pointer;
             font-size: 20px;
-            z-index: 2100;
         }
         
         /* Sidebar content (search bar and layers) */
         .sidebar-content {
             padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            position: relative;
-            z-index: 10;
         }
         
         /* Adjust search bar inside sidebar */
@@ -167,13 +161,10 @@
             height: auto !important;
             transition: none; /* Remove old transition */
             margin-bottom: 10px;
-            z-index: 20:
         }
         
         /* Adjust layers inside sidebar */
         .leaflet-control-layers {
-            position: relative !important;
-            z-index: 5;
             width: 100%;
         }
 
@@ -186,13 +177,12 @@
     
     <!-- Sidebar -->
     <div id="sidebar">
+        <div id="sidebar-toggle">☰</div> <!-- Clickable toggle button -->
         <div class="sidebar-content">
             <div id="search-bar"></div> <!-- Placeholder for the search bar -->
             <div id="layer-controls"></div> <!-- Placeholder for layers -->
         </div>
     </div>
-
-    <div id="sidebar-toggle">☰</div> <!-- Clickable toggle button -->
 
     <div id="map"></div>
 
@@ -225,27 +215,27 @@
         const OpenWeatherMap_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
         const WeatherAPI_KEY = "17d4a674ff854b26959191939250402";
 
-       var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
+       var temperatureLayer = L.tileLayer(https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
+        var cloudCoverageLayer = L.tileLayer(https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
+        var precipitationLayer = L.tileLayer(https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
+        var windLayer = L.tileLayer(https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
+        var stormTrackerLayer = L.tileLayer(https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
@@ -295,16 +285,16 @@
         
         weatherControl.update = function (weatherData) {
             if (weatherData && weatherData.location) {  
-                this._div.innerHTML = `
+                this._div.innerHTML = 
                     <b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
                     Temperature: ${weatherData.current.temp_c}°C<br>
                     Feels Like: ${weatherData.current.feelslike_c}°C<br>
                     Condition: ${weatherData.current.condition.text}<br>
                     Humidity: ${weatherData.current.humidity}%<br>
                     Wind Speed: ${weatherData.current.wind_kph} km/h
-                `;
+                ;
         } else {
-            this._div.innerHTML = "";
+            this._div.innerHTML = "Search for weather info";
             }
         };
 
@@ -315,7 +305,7 @@
         // Function to fetch weather data from Weather API
         function fetchWeather(lat, lon) {
            
-            var url = `https://api.weatherapi.com/v1/current.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&aqi=no`;
+            var url = https://api.weatherapi.com/v1/current.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&aqi=no;
 
         
             fetch(url)
