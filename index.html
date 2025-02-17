@@ -212,6 +212,11 @@
 
         // Create a custom control for displaying weather data
         var weatherControl = L.control({ position: "bottomleft" });
+
+               
+        // Add the weather control to the map
+        weatherControl.addTo(map);
+        
         
         weatherControl.onAdd = function (map) {
             this._div = L.DomUtil.create("div", "weather-info");
@@ -233,8 +238,6 @@
             }
         };
         
-        // Add the weather control to the map
-        weatherControl.addTo(map);
         
         // Function to fetch weather data from Weather API
         function fetchWeather(lat, lon) {
