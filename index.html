@@ -101,6 +101,20 @@
             height: 43px; 
         }
 
+
+         /* Style for the expanded search bar */
+        #search-bar {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .open #search-bar {
+            display: block;
+        }
             
     </style>
     <title>Global Weather Tracker</title>
@@ -110,6 +124,7 @@
     
     <!-- Search Widget -->
     <div id="search-widget" class="widget">
+        <div id="search-toggle" class="widget-toggle">Search</div>
         <div id="search-bar" class="widget-content"></div> <!-- Placeholder for the search bar -->
     </div>
 
