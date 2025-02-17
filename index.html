@@ -254,6 +254,51 @@
         layerControl.addTo(map);
 
         document.getElementById("layer-controls").appendChild(layerControl.getContainer());
+
+        // Function to fetch weather alerts
+        function fetchWeatherAlerts(lat, lon) {
+            let alertUrl = `https://api.weatherapi.com/v1/forecast.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&alerts=yes`;
+        
+            fetch(alertUrl)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeatherAlerts(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching weather alerts:", error);
+                    weatherAlertControl.update(null); // Clear if there's an error
+                });
+        }
+
+        // Create a control for weather alerts
+        var weatherAlertControl = L.control({ position: "topleft" });
+        
+        weatherAlertControl.onAdd = function (map) {
+            this._div = L.DomUtil.create("div", "weather-alerts weather-info");
+            this._div.innerHTML = "<b>No active alerts</b>";
+            return this._div;
+        };
+        
+        // Function to update alert display
+        weatherAlertControl.update = function (alertData) {
+            if (alertData && alertData.alerts && alertData.alerts.alert.length > 0) {
+                let alerts = alertData.alerts.alert;
+                let alertHTML = "<b>Weather Alerts:</b><br>";
+        
+                alerts.forEach(alert => {
+                    alertHTML += `<b>${alert.event}</b> (${alert.severity})<br>`;
+                    alertHTML += `${alert.headline}<br>`;
+                    alertHTML += `<i>${alert.instruction}</i><br><hr>`;
+                });
+        
+                this._div.innerHTML = alertHTML;
+            } else {
+                this._div.innerHTML = "<b>No active alerts</b>";
+            }
+        };
+        
+        // Add the alert control to the map
+        weatherAlertControl.addTo(map);
     </script>
 </body>
 </html>
