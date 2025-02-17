@@ -250,9 +250,8 @@
             "Storm Tracker": stormTrackerLayer
         };
 
-        L.control.layers(baseMaps, overlayMaps).addTo(map);
-        layerControl.addTo(map);
-
+        var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+     
         document.getElementById("layer-controls").appendChild(layerControl.getContainer());
 
         // Function to fetch weather alerts
