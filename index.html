@@ -39,7 +39,6 @@
             background-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
-            position: absolute;
             z-index: 1000;
         }
             
@@ -222,8 +221,8 @@
         
         weatherControl.update = function (weatherData) {
             if (weatherData && weatherData.location && weatherData.current) {  
-                this._div.innerHTML = 
-                    `<b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
+                this._div.innerHTML = `
+                    <b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
                     Temperature: ${weatherData.current.temp_c}°C<br>
                     Feels Like: ${weatherData.current.feelslike_c}°C<br>
                     Condition: ${weatherData.current.condition.text}<br>
