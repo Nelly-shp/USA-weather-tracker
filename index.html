@@ -221,7 +221,7 @@
         };
         
         weatherControl.update = function (weatherData) {
-            if (weatherData && weatherData.location) {  
+            if (weatherData && weatherData.location && weatherData.current) {  
                 this._div.innerHTML = 
                     `<b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
                     Temperature: ${weatherData.current.temp_c}°C<br>
