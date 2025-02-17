@@ -61,10 +61,9 @@
             max-width: 250px;
         }
 
-        /* Styling the search bar to include an icon */
         .leaflet-control-geocoder {
-            width: 45px !important; 
-            height: 45px !important; 
+            width: 45px !important;
+            height: 45px !important;
             overflow: hidden;
             transition: all 0.3s ease-in-out;
             background: white;
@@ -74,14 +73,12 @@
             cursor: pointer;
         }
 
-        /* Expand on hover or click */
         .leaflet-control-geocoder.expanded {
             width: 250px !important;
             height: auto !important;
             padding: 5px;
         }
 
-        
         .leaflet-control-geocoder input {
             width: 100%;
             height: 30px;
@@ -90,7 +87,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        
+
         .leaflet-control-geocoder::before {
             content: "Search";
             font-size: 16px;
@@ -108,20 +105,20 @@
                 font-size: 14px;
                 padding: 5px 10px;
             }
-        
+
             .weather-info {
                 max-width: 180px;
                 font-size: 10px;
             }
-        
+
             .leaflet-control-geocoder {
                 width: 200px !important;
             }
         }
-        /* Sidebar container */
+
         #sidebar {
             position: absolute;
-            left: -250px;  /* Initially hidden */
+            left: -250px;
             top: 0;
             width: 250px;
             height: 100%;
@@ -131,13 +128,11 @@
             z-index: 1100;
             padding-top: 10px;
         }
-        
-        /* Sidebar open */
+
         #sidebar.open {
             left: 0;
         }
-        
-        /* Sidebar toggle button */
+
         #sidebar-toggle {
             position: absolute;
             right: -40px;
@@ -149,50 +144,42 @@
             cursor: pointer;
             font-size: 20px;
         }
-        
-        /* Sidebar content (search bar and layers) */
+
         .sidebar-content {
             padding: 10px;
         }
-        
-        /* Adjust search bar inside sidebar */
+
         .leaflet-control-geocoder {
             width: 100% !important;
             height: auto !important;
-            transition: none; /* Remove old transition */
+            transition: none;
             margin-bottom: 10px;
         }
-        
-        /* Adjust layers inside sidebar */
+
         .leaflet-control-layers {
             width: 100%;
         }
-
-
     </style>
     <title>Global Weather Tracker</title>
 </head>
 <body>
     <div id="title">Global Weather Tracker</div>
-    
-    <!-- Sidebar -->
+
     <div id="sidebar">
-        <div id="sidebar-toggle">☰</div> <!-- Clickable toggle button -->
+        <div id="sidebar-toggle">☰</div>
         <div class="sidebar-content">
-            <div id="search-bar"></div> <!-- Placeholder for the search bar -->
-            <div id="layer-controls"></div> <!-- Placeholder for layers -->
+            <div id="search-bar"></div>
+            <div id="layer-controls"></div>
         </div>
     </div>
 
     <div id="map"></div>
 
-
     <script src="js/leaflet.js"></script>
     <script src="js/L.Control.Locate.min.js"></script>
     <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
-    <script src ="js/geocoder"></script>
-    <script src ="js/sidebar"></script>
-    
+    <script src="js/geocoder"></script>
+    <script src="js/sidebar"></script>
 
     <script>
         var map = L.map('map').setView([39.8283, -98.5795], 4);
@@ -205,37 +192,35 @@
             attribution: '&copy; <a href="https://carto.com/">Carto</a> contributors'
         }).addTo(map);
 
-
         var esriGrayTopo = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
             attribution: '&copy; Esri, HERE, Garmin, NOAA, USGS',
             maxZoom: 19
         });
 
-         // API Key
         const OpenWeatherMap_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
         const WeatherAPI_KEY = "17d4a674ff854b26959191939250402";
 
-       var temperatureLayer = L.tileLayer(https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
+        var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var cloudCoverageLayer = L.tileLayer(https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
+        var cloudCoverageLayer = L.tileLayer(`https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var precipitationLayer = L.tileLayer(https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
+        var precipitationLayer = L.tileLayer(`https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var windLayer = L.tileLayer(https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
+        var windLayer = L.tileLayer(`https://tile.openweathermap.org/map/wind_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
 
-        var stormTrackerLayer = L.tileLayer(https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}, {
+        var stormTrackerLayer = L.tileLayer(`https://tile.openweathermap.org/map/rain/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
         });
@@ -251,17 +236,14 @@
         geocoder.on('markgeocode', function(e) {
             var latlng = e.geocode.center;
             map.setView(latlng, 10);
-            fetchWeather(latlng.lat, latlng.lng); // Fetch weather for searched location
+            fetchWeather(latlng.lat, latlng.lng);
         });
-
-      
 
         var baseMaps = {
             "Dark Mode": darkMap,
             "Grayscale Terrain": esriGrayTopo
         };
 
-        
         var overlayMaps = {
             "Temperature": temperatureLayer,
             "Cloud Coverage": cloudCoverageLayer,
@@ -273,41 +255,33 @@
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-        // Create a custom control for displaying weather data
         var weatherControl = L.control({ position: "topright" });
-        
+
         weatherControl.onAdd = function (map) {
             this._div = L.DomUtil.create("div", "weather-info");
             this.update();
             return this._div;
         };
-        
-        
+
         weatherControl.update = function (weatherData) {
-            if (weatherData && weatherData.location) {  
-                this._div.innerHTML = 
-                    <b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
+            if (weatherData && weatherData.location) {
+                this._div.innerHTML =
+                    `<b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
                     Temperature: ${weatherData.current.temp_c}°C<br>
                     Feels Like: ${weatherData.current.feelslike_c}°C<br>
                     Condition: ${weatherData.current.condition.text}<br>
                     Humidity: ${weatherData.current.humidity}%<br>
-                    Wind Speed: ${weatherData.current.wind_kph} km/h
-                ;
-        } else {
-            this._div.innerHTML = "Search for weather info";
+                    Wind Speed: ${weatherData.current.wind_kph} km/h`;
+            } else {
+                this._div.innerHTML = "Search for weather info";
             }
         };
 
-            
-        // Add the weather control to the map
         weatherControl.addTo(map);
-        
-        // Function to fetch weather data from Weather API
-        function fetchWeather(lat, lon) {
-           
-            var url = https://api.weatherapi.com/v1/current.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&aqi=no;
 
-        
+        function fetchWeather(lat, lon) {
+            var url = `https://api.weatherapi.com/v1/current.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&aqi=no`;
+
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -315,17 +289,14 @@
                 })
                 .catch(error => console.error("Error fetching weather data:", error));
         }
-        
-        // Function to display weather data in the weather control
+
         function displayWeatherData(weatherData) {
             weatherControl.update(weatherData);
         }
-        
-        // Event listener for map clicks to fetch weather data at clicked location
+
         map.on("click", function (e) {
             fetchWeather(e.latlng.lat, e.latlng.lng);
         });
-
     </script>
 </body>
 </html>
