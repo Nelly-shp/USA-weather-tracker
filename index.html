@@ -216,7 +216,7 @@
         
         weatherControl.onAdd = function (map) {
             this._div = L.DomUtil.create("div", "weather-info");
-            this.update();
+            this._div.innerHTML = "Click on the map to get weather info";
             return this._div;
         };
         
@@ -246,7 +246,10 @@
                 .then(data => {
                     displayWeatherData(data);
                 })
-                .catch(error => console.error("Error fetching weather data:", error));
+               .catch(error => {
+                    console.error("Error fetching weather data:", error);
+                    weatherControl.update(null);
+                });
         }
         
         // Function to display weather data in the weather control
