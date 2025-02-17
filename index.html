@@ -59,7 +59,7 @@
 
         .widget.open {
             width: 220px;
-        )
+        }
 
         .widget-toggle {
             padding: 8px 12px;
@@ -133,8 +133,7 @@
     <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
     <script src="js/geocoder.js"></script>
     <script>
-    // JavaScript for handling the toggle action
-    const searchWidget = document.getElementById('search-widget');
+   
     
     // Add click event listener to toggle the search widget expansion
     searchWidget.addEventListener('click', function() {
@@ -218,8 +217,8 @@
             "Storm Tracker": stormTrackerLayer,
         };
 
-        L.control.layers(baseMaps, overlayMaps).addTo(map);
-        layerControl.addTo(map);
+       var layerControl =  L.control.layers(baseMaps, overlayMaps).addTo(map);
+        
 
         // Move layer control into the widget
         document.getElementById("layer-controls").appendChild(layerControl.getContainer());
