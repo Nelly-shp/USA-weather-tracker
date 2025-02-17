@@ -33,144 +33,73 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .weather-info {
+        /* Positioning the widgets in the top-right corner */
+        .widget {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #333;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            max-width: 200px;
-            line-height: 1.6;
-            z-index: 1000;
-        }
-
-        .leaflet-control-layers {
-            position: absolute !important;
-            top: 60px !important;
-            right: 5px !important;
-            z-index: 900;
-            background: white;
+            top: 10px;
+            right: 10px;
+            width: 220px;
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            padding: 5px;
-            max-width: 250px;
-        }
-
-        .leaflet-control-geocoder {
-            width: 45px !important;
-            height: 45px !important;
-            overflow: hidden;
-            transition: all 0.3s ease-in-out;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .leaflet-control-geocoder.expanded {
-            width: 250px !important;
-            height: auto !important;
-            padding: 5px;
-        }
-
-        .leaflet-control-geocoder input {
-            width: 100%;
-            height: 30px;
-            font-size: 14px;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .leaflet-control-geocoder::before {
-            content: "Search";
-            font-size: 16px;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 50%;
-            transform: translate(-50%, -50%);
-            color: #555;
-            pointer-events: none;
-        }
-
-        @media (max-width: 600px) {
-            #title {
-                font-size: 14px;
-                padding: 5px 10px;
-            }
-
-            .weather-info {
-                max-width: 180px;
-                font-size: 10px;
-            }
-
-            .leaflet-control-geocoder {
-                width: 200px !important;
-            }
-        }
-
-        #sidebar {
-            position: absolute;
-            left: -250px;
-            top: 0;
-            width: 250px;
-            height: 100%;
-            background: white;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-            transition: left 0.3s ease-in-out;
-            z-index: 1100;
-            padding-top: 10px;
-        }
-
-        #sidebar.open {
-            left: 0;
-        }
-
-        #sidebar-toggle {
-            position: absolute;
-            right: -40px;
-            top: 20px;
-            background: #333;
-            color: white;
-            padding: 10px;
-            border-radius: 0 5px 5px 0;
-            cursor: pointer;
-            font-size: 20px;
-        }
-
-        .sidebar-content {
-            padding: 10px;
-        }
-
-        .leaflet-control-geocoder {
-            width: 100% !important;
-            height: auto !important;
-            transition: none;
             margin-bottom: 10px;
+            z-index: 1000;
+            transition: all 0.3s ease-in-out;
         }
 
-        .leaflet-control-layers {
-            width: 100%;
+        .widget-toggle {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: #333;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .widget-content {
+            display: none;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            margin-top: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Expand widget when clicked */
+        .widget.open .widget-content {
+            display: block;
+        }
+
+        .widget.open .widget-toggle {
+            background-color: #007BFF;
+        }
+
+        /* Responsiveness for mobile */
+        @media (max-width: 600px) {
+            .widget {
+                width: 180px;
+            }
         }
     </style>
     <title>Global Weather Tracker</title>
 </head>
 <body>
     <div id="title">Global Weather Tracker</div>
+    
+    <!-- Search Widget -->
+    <div id="search-widget" class="widget">
+        <div id="search-toggle" class="widget-toggle">🔍 Search</div>
+        <div id="search-bar" class="widget-content"></div> <!-- Placeholder for the search bar -->
+    </div>
 
-    <div id="sidebar">
-        <div id="sidebar-toggle">☰</div>
-        <div class="sidebar-content">
-            <div id="search-bar"></div>
-            <div id="layer-controls"></div>
-        </div>
+    <!-- Layers Widget -->
+    <div id="layers-widget" class="widget">
+        <div id="layers-toggle" class="widget-toggle">🌍 Layers</div>
+        <div id="layer-controls" class="widget-content"></div> <!-- Placeholder for layers -->
     </div>
 
     <div id="map"></div>
@@ -178,9 +107,9 @@
     <script src="js/leaflet.js"></script>
     <script src="js/L.Control.Locate.min.js"></script>
     <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
-    <script src="js/geocoder"></script>
-    <script src="js/sidebar"></script>
-
+    <script src="js/geocoder.js"></script>
+    <script src="js/sidebar.js"></script>
+    
     <script>
         var map = L.map('map').setView([39.8283, -98.5795], 4);
 
@@ -197,6 +126,7 @@
             maxZoom: 19
         });
 
+        // API Key
         const OpenWeatherMap_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
         const WeatherAPI_KEY = "17d4a674ff854b26959191939250402";
 
@@ -236,7 +166,7 @@
         geocoder.on('markgeocode', function(e) {
             var latlng = e.geocode.center;
             map.setView(latlng, 10);
-            fetchWeather(latlng.lat, latlng.lng);
+            fetchWeather(latlng.lat, latlng.lng); // Fetch weather for searched location
         });
 
         var baseMaps = {
@@ -255,17 +185,18 @@
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
 
+        // Create a custom control for displaying weather data
         var weatherControl = L.control({ position: "topright" });
-
+        
         weatherControl.onAdd = function (map) {
             this._div = L.DomUtil.create("div", "weather-info");
             this.update();
             return this._div;
         };
-
+        
         weatherControl.update = function (weatherData) {
-            if (weatherData && weatherData.location) {
-                this._div.innerHTML =
+            if (weatherData && weatherData.location) {  
+                this._div.innerHTML = 
                     `<b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
                     Temperature: ${weatherData.current.temp_c}°C<br>
                     Feels Like: ${weatherData.current.feelslike_c}°C<br>
@@ -276,9 +207,11 @@
                 this._div.innerHTML = "Search for weather info";
             }
         };
-
+        
+        // Add the weather control to the map
         weatherControl.addTo(map);
-
+        
+        // Function to fetch weather data from Weather API
         function fetchWeather(lat, lon) {
             var url = `https://api.weatherapi.com/v1/current.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&aqi=no`;
 
@@ -289,19 +222,34 @@
                 })
                 .catch(error => console.error("Error fetching weather data:", error));
         }
-
+        
+        // Function to display weather data in the weather control
         function displayWeatherData(weatherData) {
             weatherControl.update(weatherData);
         }
-
+        
+        // Event listener for map clicks to fetch weather data at clicked location
         map.on("click", function (e) {
             fetchWeather(e.latlng.lat, e.latlng.lng);
+        });
+
+        // Widget Toggle Functions
+        const searchWidget = document.getElementById('search-widget');
+        const searchToggle = document.getElementById('search-toggle');
+        
+        searchToggle.addEventListener('click', function() {
+            searchWidget.classList.toggle('open');
+        });
+
+        const layersWidget = document.getElementById('layers-widget');
+        const layersToggle = document.getElementById('layers-toggle');
+        
+        layersToggle.addEventListener('click', function() {
+            layersWidget.classList.toggle('open');
         });
     </script>
 </body>
 </html>
-
-
 
 
 
