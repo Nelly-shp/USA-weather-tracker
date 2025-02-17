@@ -16,3 +16,14 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("layer-controls").appendChild(layerControl);
     }
 });
+
+document.getElementById("sidebar-toggle").addEventListener("click", function() {
+    document.getElementById("sidebar").classList.toggle("open");
+
+    // Ensure the search bar expands properly
+    let searchBar = document.querySelector(".leaflet-control-geocoder");
+    if (searchBar) {
+        searchBar.classList.add("expanded"); // Ensures it doesn’t remain squished
+    }
+});
+
