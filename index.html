@@ -234,7 +234,7 @@
 
         // Function to fetch weather data from Weather API
         function fetchWeather(lat, lon) {
-            var url = `https://api.weatherapi.com/v1/forecast.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&days=7&aqi=no`;
+            var url = `https://api.weatherapi.com/v1/forecast.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&days=3&aqi=no`;
 
             fetch(url)
                 .then(response => response.json())
