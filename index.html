@@ -60,53 +60,7 @@
             font-size: 16px;
         }
 
-        .widget {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 43px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            margin-bottom: 10px;
-            z-index: 1000;
-            transition: all 0.3s ease-in-out;
-        }
-
-        .widget.open {
-            width: 220px;
-        }
-
-        .widget-toggle {
-            padding: 8px 12px;
-            cursor: pointer;
-            font-weight: bold;
-            background-color: #333;
-            color: white;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        .widget-content {
-            display: none;
-            padding: 10px;
-            background-color: white;
-            border-radius: 8px;
-            margin-top: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .widget.open .widget-content {
-            display: block;
-        }
-
-        .widget.open .widget-toggle {
-            background-color: #007BFF;
-        }
-
+        
         @media (max-width: 600px) {
             .widget {
                 width: 180px;
