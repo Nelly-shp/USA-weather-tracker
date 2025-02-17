@@ -122,6 +122,16 @@
     </div>
 
     <div id="map"></div>
+       
+    //weather alers
+    <div id="layers-widget" class="widget">
+    <div class="widget-toggle" id="layers-toggle">Layers</div>
+    <div id="layer-controls" class="widget-content">
+        <label>
+            <input type="checkbox" id="toggle-alerts"> Show Weather Alerts
+        </label>
+    </div>
+    </div>
 
     <script src="js/leaflet.js"></script>
     <script src="js/L.Control.Locate.min.js"></script>
@@ -203,7 +213,7 @@
             "Precipitation": precipitationLayer,
             "Wind": windLayer,
             "Storm Tracker": stormTrackerLayer,
-            "Weather Alerts": extremeWeatherAlertsLayer
+            "Weather Alerts": alertlayer
         };
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
