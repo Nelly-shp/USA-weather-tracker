@@ -138,11 +138,31 @@
             maxZoom: 19
         });
 
-        var geocoder = L.Control.geocoder({
+        var geocoderControl = L.Control.geocoder({
             position: "topright",
-            placeholder: "Search",
+            placeholder: "Search...",
             defaultMarkGeocode: true
         }).addTo(map);
+        
+        // Get the Geocoder input element and add event listener for expansion
+        setTimeout(() => {
+            let geocoderContainer = document.querySelector('.leaflet-control-geocoder');
+        
+            if (geocoderContainer) {
+                geocoderContainer.style.width = "43px"; // Default small size
+        
+                geocoderContainer.addEventListener('click', () => {
+                    geocoderContainer.style.width = "250px"; // Expand on click
+                });
+        
+                document.addEventListener('click', (event) => {
+                    if (!geocoderContainer.contains(event.target)) {
+                        geocoderContainer.style.width = "43px"; // Collapse when clicking outside
+                    }
+                });
+            }
+        }, 500);
+
 
         geocoder.on('markgeocode', function(e) {
             var latlng = e.geocode.center;
