@@ -48,7 +48,7 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            width: 220px;
+            width: 43px;
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -56,6 +56,10 @@
             z-index: 1000;
             transition: all 0.3s ease-in-out;
         }
+
+        .widget.open {
+            width: 220px;
+        )
 
         .widget-toggle {
             padding: 8px 12px;
@@ -102,19 +106,7 @@
         }
 
 
-         /* Style for the expanded search bar */
-        #search-bar {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            margin-top: 5px;
-            display: none;
-        }
 
-        .open #search-bar {
-            display: block;
-        }
             
     </style>
     <title>Global Weather Tracker</title>
@@ -140,7 +132,15 @@
     <script src="js/L.Control.Locate.min.js"></script>
     <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
     <script src="js/geocoder.js"></script>
+    <script>
+    // JavaScript for handling the toggle action
+    const searchWidget = document.getElementById('search-widget');
     
+    // Add click event listener to toggle the search widget expansion
+    searchWidget.addEventListener('click', function() {
+        searchWidget.classList.toggle('open'); // Toggle the 'open' class
+    });
+    </script>
     
     <script>
         var map = L.map('map',{
