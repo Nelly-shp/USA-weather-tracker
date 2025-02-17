@@ -34,6 +34,8 @@
         }
 
         .weather-info {
+            position: absolute;
+            right: 40px;
             font-size: 12px;
             font-weight: bold;
             color: #333;
@@ -136,7 +138,7 @@
         /* Sidebar toggle button */
         #sidebar-toggle {
             position: absolute;
-            right: 40px;
+            right: -40px;
             top: 20px;
             background: #333;
             color: white;
@@ -290,7 +292,7 @@
                     Wind Speed: ${weatherData.current.wind_kph} km/h
                 `;
         } else {
-            this._div.innerHTML = "Weather info unavailable";
+            this._div.innerHTML = "Search for weather info";
             }
         };
 
