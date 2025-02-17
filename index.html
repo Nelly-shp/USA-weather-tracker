@@ -33,6 +33,11 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
+        .weather-info {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+            
+        
         /* Positioning the widgets in the top-right corner */
         .widget {
             position: absolute;
@@ -186,7 +191,7 @@
         L.control.layers(baseMaps, overlayMaps).addTo(map);
 
         // Create a custom control for displaying weather data
-        var weatherControl = L.control({ position: "topleft" });
+        var weatherControl = L.control({ position: "bottomleft" });
         
         weatherControl.onAdd = function (map) {
             this._div = L.DomUtil.create("div", "weather-info");
