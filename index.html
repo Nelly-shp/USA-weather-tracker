@@ -152,7 +152,7 @@
             }
         }, 500);
 
-        geocoder.on('markgeocode', function(e) {
+        geocoderControl.on('markgeocode', function(e) {
             var latlng = e.geocode.center;
             map.setView(latlng, 10);
             fetchWeather(latlng.lat, latlng.lng); // Fetch weather for searched location
@@ -256,7 +256,8 @@
 
         // Function to fetch weather alerts
         function fetchWeatherAlerts(lat, lon) {
-            let alertUrl = `https://api.weatherapi.com/v1/forecast.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&alerts=yes`;
+            let alertUrl = let alertUrl = `https://api.weatherapi.com/v1/alerts.json?key=${WeatherAPI_KEY}&q=${lat},${lon}`;
+
         
             fetch(alertUrl)
                 .then(response => response.json())
