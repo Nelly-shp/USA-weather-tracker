@@ -151,6 +151,8 @@
         const OpenWeatherMap_KEY = "a07cf6ab0797ebd4db846df1c6003fd3";
         const WeatherAPI_KEY = "17d4a674ff854b26959191939250402";
 
+        var alertLayer = L.layerGroup().addTo(map);
+
         var temperatureLayer = L.tileLayer(`https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${OpenWeatherMap_KEY}`, {
             attribution: 'Weather data &copy; OpenWeatherMap',
             maxZoom: 19
@@ -273,9 +275,6 @@
                 .catch(error => console.error("Error fetching alerts:", error));
         }
 
-
-        // Group layer for weather alerts (so it can be toggled on/off)
-        var alertLayer = L.layerGroup().addTo(map);
         
         // Function to display alerts on the map
         function displayAlertWeatherAPI(alert) {
@@ -300,6 +299,15 @@
                 alertLayer.addLayer(marker);
             }
         }
+
+                // Toggle Weather Alerts Layer
+        document.getElementById("toggle-alerts").addEventListener("change", function (e) {
+            if (e.target.checked) {
+                map.addLayer(alertLayer);
+            } else {
+                map.removeLayer(alertLayer);
+            }
+        });
 
         // Widget Toggle Functions
         const searchWidget = document.getElementById('search-widget');
