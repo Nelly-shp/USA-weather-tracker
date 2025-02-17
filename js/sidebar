@@ -5,25 +5,27 @@ document.addEventListener("DOMContentLoaded", function () {
     // Toggle sidebar open/close
     toggleBtn.addEventListener("click", function () {
         sidebar.classList.toggle("open");
+
+        // Ensure the search bar expands properly when the sidebar opens
+        let searchBar = document.querySelector(".leaflet-control-geocoder");
+        if (searchBar && sidebar.classList.contains("open")) {
+            searchBar.classList.add("expanded");
+        } else if (searchBar) {
+            searchBar.classList.remove("expanded");
+        }
     });
 
     // Move Geocoder and Layer Controls inside Sidebar
     let geocoderControl = document.querySelector(".leaflet-control-geocoder");
     let layerControl = document.querySelector(".leaflet-control-layers");
 
-    if (geocoderControl && layerControl) {
+    if (geocoderControl) {
         document.getElementById("search-bar").appendChild(geocoderControl);
+    }
+    
+    if (layerControl) {
         document.getElementById("layer-controls").appendChild(layerControl);
     }
 });
 
-document.getElementById("sidebar-toggle").addEventListener("click", function() {
-    document.getElementById("sidebar").classList.toggle("open");
-
-    // Ensure the search bar expands properly
-    let searchBar = document.querySelector(".leaflet-control-geocoder");
-    if (searchBar) {
-        searchBar.classList.add("expanded"); // Ensures it doesn’t remain squished
-    }
-});
 
