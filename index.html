@@ -97,6 +97,11 @@
             width: 43px;
             height: 43px;
         }
+
+        .leaflet-control-geocoder.leaflet-control-expanded {
+            width: 250px !important;
+        }
+
     </style>
     <title>Global Weather Tracker</title>
 </head>
@@ -172,22 +177,20 @@
         // Get the Geocoder input element and add event listener for expansion
         setTimeout(() => {
             let geocoderContainer = document.querySelector('.leaflet-control-geocoder');
-            let geocoderInput = geocoderContainer ? geocoderContainer.querySelector('input') : null;
         
-            if (geocoderContainer && geocoderInput) {
-                geocoderInput.style.width = "43px"; // Default small size
-        
+            if (geocoderContainer) {
                 geocoderContainer.addEventListener('click', () => {
-                    geocoderInput.style.width = "250px"; // Expand only input, not the entire container
+                    geocoderContainer.classList.add("leaflet-control-expanded");
                 });
         
                 document.addEventListener('click', (event) => {
                     if (!geocoderContainer.contains(event.target)) {
-                        geocoderInput.style.width = "43px"; // Collapse input when clicking outside
+                        geocoderContainer.classList.remove("leaflet-control-expanded");
                     }
                 });
             }
         }, 500);
+
 
 
         geocoder.on('markgeocode', function(e) {
