@@ -150,6 +150,7 @@
         weatherControl.update = function(weatherData) {
             if (weatherData && weatherData.location && weatherData.current) {  
                 this._div.innerHTML = `
+                    <button id="close-weather" style="position:absolute; top:5px; right:5px; background:#f00; color:#fff; border:none; padding:5px 8px; border-radius:50%;">X</button>
                     <b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
                     Temperature: ${weatherData.current.temp_c}°C<br>
                     Feels Like: ${weatherData.current.feelslike_c}°C<br>
@@ -168,6 +169,12 @@
                         }).join('')}
                     </div>
                 `;
+                // Add event listener to close the weather popup
+                document.getElementById('close-weather').addEventListener('click', function() {
+                    weatherControl._div.style.display = 'none';
+        });
+                // Make sure the div is visible when updated
+                weatherControl._div.style.display = 'block';
             } else {
                 this._div.innerHTML = "Search for weather info";
             }
