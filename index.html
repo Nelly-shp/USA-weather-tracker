@@ -63,29 +63,7 @@
             font-size: 16px;
         }
 
-        .widget {
-            position: absolute;
-            top: 30px;
-            right: 10px;
-            width: 43px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            margin-bottom: 10px;
-            z-index: 1000;
-            transition: all 0.3s ease-in-out;
-        }
-
-         .widget-content {
-            display: none;
-            padding: 10px;
-            background-color: white;
-            border-radius: 8px;
-            margin-top: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            max-height: 300px;
-            overflow-y: auto;
-        }
+        
         @media (max-width: 600px) {
             .widget {
                 width: 180px;
@@ -108,17 +86,7 @@
 <body>
     <div id="title">Global Weather Tracker</div>
     
-    <!-- Search Widget -->
-    <div id="search-widget" class="widget">
-        
-        <div id="search-bar" class="widget-content"></div> <!-- Placeholder for the search bar -->
-    </div>
 
-    <!-- Layers Widget -->
-    <div id="layers-widget" class="widget">
-        <div id="layers-toggle" class="widget-toggle">Layers</div>
-        <div id="layer-controls" class="widget-content"></div> <!-- Placeholder for layers -->
-    </div>
 
     <div id="map"></div>
        
