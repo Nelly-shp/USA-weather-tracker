@@ -72,6 +72,19 @@
             width: 43px;
             height: 43px;
         }
+
+        .weather-alert {
+            position: fixed;
+            top: 20px;
+            left: 20px
+            background: red;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
     </style>
     <title>Global Weather Tracker</title>
 </head>
@@ -193,12 +206,15 @@
 
         // Function to fetch weather data from Weather API
         function fetchWeather(lat, lon) {
-            var url = `https://api.weatherapi.com/v1/forecast.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&days=3&aqi=no`;
+            var url = `https://api.weatherapi.com/v1/forecast.json?key=${WeatherAPI_KEY}&q=${lat},${lon}&days=3&aqi=no&alerts=yes`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     displayWeatherData(data);
+                    if (data.alerts && data.alerts.alert.length > 0) {
+                        showWeatherAlert(data.alerts.alert[0]); // Show first alert
+                    }
                 })
                 .catch(error => {
                     console.error("Error fetching weather data:", error);
@@ -218,6 +234,19 @@
             return daysOfWeek[date.getDay()];
         }
 
+        //function to show weather alerts
+        function showWeatherAlert(alertData) {
+            var alertBox = document.createElement("div");
+            alertBox.className = "weather-alert";
+            alertBox.innerHTML = `
+                <b>⚠️ Weather Alert:</b> ${alertData.headline} <br>
+                <p>${alertData.desc}</p>
+                <button onclick="this.parentElement.remove()">Close</button>
+            `;
+            document.body.appendChild(alertBox);
+        }
+
+        
         // Event listener for map clicks to fetch weather data at clicked location
         map.on("click", function(e) {
             fetchWeather(e.latlng.lat, e.latlng.lng);
