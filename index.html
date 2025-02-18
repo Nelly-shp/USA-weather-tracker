@@ -143,7 +143,7 @@
         var weatherControl = L.control({ position: "bottomleft" });
         weatherControl.onAdd = function(map) {
             this._div = L.DomUtil.create("div", "weather-info");
-            this._div.innerHTML = "Click on the map to get weather info";
+            this._div.innerHTML = "Click map for weather info";
             return this._div;
         };
 
@@ -171,6 +171,7 @@
                 `;
                 // Add event listener to close the weather popup (reset to default message instead of hiding)
                 document.getElementById('close-weather').addEventListener('click', function() {
+                    event.stopPropagation(); // Prevents map click from triggering
                     weatherControl._div.innerHTML = "Click map for weather info";
                 });
                 
