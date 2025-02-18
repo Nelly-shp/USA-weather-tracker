@@ -45,9 +45,6 @@
         
         /* Forecast section */
         .forecast {
-            position: absolute;
-            bottom: 10px;
-            right: -10px;
             margin-top: 10px;
             border-top: 1px solid #ddd;
             padding-top: 10px;
@@ -56,14 +53,14 @@
         .forecast-day {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .forecast-day b {
             font-size: 16px;
         }
 
-        
+
         @media (max-width: 600px) {
             .widget {
                 width: 180px;
@@ -75,27 +72,12 @@
             width: 43px;
             height: 43px;
         }
-
-        .leaflet-control-geocoder.leaflet-control-expanded {
-            width: 250px !important;
-            z-indx: 1001 !important;
-        }
-
-        .leaflet-top, .leaflet-bottom {
-            z-index: 1000 !important; /* Ensure controls stay visible */
-        }
-        
-        .weather-info {
-            z-index: 1000 !important;
-        }
-
     </style>
     <title>Global Weather Tracker</title>
 </head>
 <body>
     <div id="title">Global Weather Tracker</div>
     
-
 
     <div id="map"></div>
        
@@ -145,35 +127,11 @@
             maxZoom: 19
         });
 
-        var geocoderControl = L.Control.geocoder({
+        var geocoder = L.Control.geocoder({
             position: "topright",
-            placeholder: "Search...",
+            placeholder: "Search",
             defaultMarkGeocode: true
         }).addTo(map);
-        
-        // Get the Geocoder input element and add event listener for expansion
-        setTimeout(() => {
-            let geocoderContainer = document.querySelector('.leaflet-control-geocoder');
-        
-            if (geocoderContainer) {
-                geocoderContainer.addEventListener('click', () => {
-                    geocoderContainer.classList.add("leaflet-control-expanded");
-                });
-        
-                document.addEventListener('click', (event) => {
-                    if (!geocoderContainer.contains(event.target)) {
-                        geocoderContainer.classList.remove("leaflet-control-expanded");
-                    
-                    weatherControl.addTo(map);
-                    L.control.layers(baseMaps, overlayMaps).addTo(map);
-
-                    
-                    }
-                });
-            }   
-        }, 500);
-
-
 
         geocoder.on('markgeocode', function(e) {
             var latlng = e.geocode.center;
@@ -249,16 +207,6 @@
             fetchWeather(e.latlng.lat, e.latlng.lng);
         });
 
-        // Widget Toggle
-        const searchToggle = document.getElementById('search-toggle');
-        searchToggle.addEventListener('click', function() {
-            document.getElementById('search-widget').classList.toggle('open');
-        });
-
-        const layersToggle = document.getElementById('layers-toggle');
-        layersToggle.addEventListener('click', function() {
-            document.getElementById('layers-widget').classList.toggle('open');
-        });
 
         var baseMaps = {
             "Dark Mode": darkMap,
@@ -273,9 +221,8 @@
             "Storm Tracker": stormTrackerLayer
         };
 
-        var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
-
-
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+        layerControl.addTo(map);
 
         document.getElementById("layer-controls").appendChild(layerControl.getContainer());
     </script>
