@@ -147,36 +147,45 @@
             return this._div;
         };
 
-        weatherControl.update = function(weatherData) {
+       weatherControl.update = function(weatherData) {
             if (weatherData && weatherData.location && weatherData.current) {  
                 this._div.innerHTML = `
-                    <button id="close-weather" style="position:absolute; top:5px; right:5px; background:#f00; color:#fff; border:none; padding:5px 8px; border-radius:50%;">X</button>
-                    <b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b><br>
-                    Temperature: ${weatherData.current.temp_c}°C<br>
-                    Feels Like: ${weatherData.current.feelslike_c}°C<br>
-                    Condition: ${weatherData.current.condition.text}<br>
-                    Humidity: ${weatherData.current.humidity}%<br>
-                    Wind Speed: ${weatherData.current.wind_kph} km/h
-                    <div class="forecast">
-                        <b>Forecast:</b><br>
-                        ${weatherData.forecast.forecastday.map(function(day) {
-                            return `
-                                <div class="forecast-day">
-                                    <b>${getDayOfWeek(day.date)}</b>: 
-                                    ${day.day.avgtemp_c}°C, ${day.day.condition.text}
-                                </div>
-                            `;
-                        }).join('')}
+                    <div id="weather-popup" style="display: flex; flex-direction: column; position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <b>Weather in ${weatherData.location.name}, ${weatherData.location.country}:</b>
+                            <button id="close-weather" style="background: none; border: none; font-size: 16px; cursor: pointer;">❌</button>
+                        </div>
+                        Temperature: ${weatherData.current.temp_c}°C<br>
+                        Feels Like: ${weatherData.current.feelslike_c}°C<br>
+                        Condition: ${weatherData.current.condition.text}<br>
+                        Humidity: ${weatherData.current.humidity}%<br>
+                        Wind Speed: ${weatherData.current.wind_kph} km/h
+                        <div class="forecast">
+                            <b>Forecast:</b><br>
+                            ${weatherData.forecast.forecastday.map(function(day) {
+                                return `
+                                    <div class="forecast-day">
+                                        <b>${getDayOfWeek(day.date)}</b>: 
+                                        ${day.day.avgtemp_c}°C, ${day.day.condition.text}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
                     </div>
                 `;
-                // Add event listener to close the weather popup (reset to default message instead of hiding)
-                document.getElementById('close-weather').addEventListener('click', function() {
-                    event.stopPropagation(); // Prevents map click from triggering
-                    weatherControl._div.innerHTML = "Click map for weather info";
+        
+                // Prevent clicks inside the weather popup from triggering the map click
+                document.getElementById('weather-popup').addEventListener('click', function(event) {
+                    event.stopPropagation();
                 });
-                
+        
+                // Add event listener to the close button
+                document.getElementById('close-weather').addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevents map click from triggering
+                    weatherControl._div.innerHTML = "Click on the map to get weather info";
+                });
             } else {
-                this._div.innerHTML = "Click map for weather info";
+                this._div.innerHTML = "Search for weather info";
             }
         };
 
