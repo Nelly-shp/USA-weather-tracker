@@ -78,6 +78,15 @@
 
         .leaflet-control-geocoder.leaflet-control-expanded {
             width: 250px !important;
+            z-indx: 1001 !important;
+        }
+
+        .leaflet-top, .leaflet-bottom {
+            z-index: 1000 !important; /* Ensure controls stay visible */
+        }
+        
+        .weather-info {
+            z-index: 1000 !important;
         }
 
     </style>
@@ -154,9 +163,14 @@
                 document.addEventListener('click', (event) => {
                     if (!geocoderContainer.contains(event.target)) {
                         geocoderContainer.classList.remove("leaflet-control-expanded");
+                    
+                    weatherControl.addTo(map);
+                    L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+                    
                     }
                 });
-            }
+            }   
         }, 500);
 
 
@@ -259,8 +273,9 @@
             "Storm Tracker": stormTrackerLayer
         };
 
-        L.control.layers(baseMaps, overlayMaps).addTo(map);
-        layerControl.addTo(map);
+        var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+
 
         document.getElementById("layer-controls").appendChild(layerControl.getContainer());
     </script>
