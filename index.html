@@ -169,12 +169,11 @@
                         }).join('')}
                     </div>
                 `;
-                // Add event listener to close the weather popup
+                // Add event listener to close the weather popup (reset to default message instead of hiding)
                 document.getElementById('close-weather').addEventListener('click', function() {
-                    weatherControl._div.style.display = 'none';
-        });
-                // Make sure the div is visible when updated
-                weatherControl._div.style.display = 'block';
+                    weatherControl._div.innerHTML = "Click map for weather info";
+                });
+                
             } else {
                 this._div.innerHTML = "Click map for weather info";
             }
