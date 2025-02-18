@@ -172,17 +172,18 @@
         // Get the Geocoder input element and add event listener for expansion
         setTimeout(() => {
             let geocoderContainer = document.querySelector('.leaflet-control-geocoder');
+            let geocoderInput = geocoderContainer ? geocoderContainer.querySelector('input') : null;
         
-            if (geocoderContainer) {
-                geocoderContainer.style.width = "43px"; // Default small size
+            if (geocoderContainer && geocoderInput) {
+                geocoderInput.style.width = "43px"; // Default small size
         
                 geocoderContainer.addEventListener('click', () => {
-                    geocoderContainer.style.width = "250px"; // Expand on click
+                    geocoderInput.style.width = "250px"; // Expand only input, not the entire container
                 });
         
                 document.addEventListener('click', (event) => {
                     if (!geocoderContainer.contains(event.target)) {
-                        geocoderContainer.style.width = "43px"; // Collapse when clicking outside
+                        geocoderInput.style.width = "43px"; // Collapse input when clicking outside
                     }
                 });
             }
