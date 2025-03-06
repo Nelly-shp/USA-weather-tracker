@@ -88,7 +88,7 @@
         .weather-alert {
             position: fixed;
             top: 20px;
-            left: 20px;
+            left: 10px;
             background: rgba(255, 0, 0, 0.9);
             color: white;
             padding: 10px;
@@ -103,10 +103,10 @@
 
         
     </style>
-    <title>Global Weather Tracker</title>
+    <title></title>
 </head>
 <body>
-    <div id="title">Global Weather Tracker</div>
+    <div id="title">Weather Tracker</div>
     
 
     <div id="map"></div>
@@ -120,15 +120,15 @@
             zoomControl: false,
             minZoom: 3, // Prevents excessive zooming out
             maxBounds: [
-                [5, -170],   // Southwest corner (Central America)
-                [75, -50]    // Northeast corner (Greenland)
+                [24.396308, -125.000000], // Southwest corner (Southern California)
+                [49.384358, -66.934570]   // Northeast corner (Maine)
             ]
-        }).setView([40, -100], 4); // Centered on North America
+        }).setView([37.8, -96], 5); // Centered on North America
         
         // Ensure users stay within the bounds
-        map.setMaxBounds([
-            [5, -170],   // Southwest
-            [75, -50]    // Northeast
+        map.setMaxBounds(
+            [24.396308, -125.000000], // Southwest corner (Southern California)
+            [49.384358, -66.934570]    // Northeast
         ]);
         
         map.on('drag', function() {
