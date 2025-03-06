@@ -166,11 +166,11 @@
           //  defaultMarkGeocode: true
         //}).addTo(map);
 
-        geocoder.on('markgeocode', function(e) {
-            var latlng = e.geocode.center;
-            map.setView(latlng, 10);
-            fetchWeather(latlng.lat, latlng.lng); // Fetch weather for searched location
-        });
+        //geocoder.on('markgeocode', function(e) {
+          //  var latlng = e.geocode.center;
+          //  map.setView(latlng, 10);
+           // fetchWeather(latlng.lat, latlng.lng); // Fetch weather for searched location
+        //});
 
         // Create weather control
         var weatherControl = L.control({ position: "bottomleft" });
