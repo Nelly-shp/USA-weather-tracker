@@ -104,17 +104,17 @@
     <script>
         var map = L.map('map', {
             zoomControl: false,
-            minZoom: 3, // Prevents excessive zooming out
+            minZoom: 4, // Prevents excessive zooming out
             maxBounds: [
-                [24.396308, -125.000000], // Southwest corner (Southern California)
-                [49.384358, -66.934570]   // Northeast corner (Maine)
+                [7.5, -170.0], // Southwest corner (Southern California)
+                [72.0, -50.0]   // Northeast corner (Maine)
             ]
         }).setView([37.8, -96], 5); // Centered on North America
         
         // Ensure users stay within the bounds
         map.setMaxBounds([
-            [24.396308, -125.000000], // Southwest corner (Southern California)
-            [49.384358, -66.934570]    // Northeast
+            [7.5, -170.0], // Southwest corner (Southern California)
+            [72.0, -50.0]    // Northeast
         ]);
         
         map.on('drag', function() {
