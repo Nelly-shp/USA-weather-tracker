@@ -20,20 +20,6 @@
             touch-action: none;
         }
 
-        #title {
-            position: absolute;
-            top: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
 
         .weather-info {
             background-color: rgba(255, 255, 255, 0.8);
@@ -126,7 +112,7 @@
         }).setView([37.8, -96], 5); // Centered on North America
         
         // Ensure users stay within the bounds
-        map.setMaxBounds(
+        map.setMaxBounds([
             [24.396308, -125.000000], // Southwest corner (Southern California)
             [49.384358, -66.934570]    // Northeast
         ]);
