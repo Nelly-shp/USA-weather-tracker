@@ -268,7 +268,11 @@
             } else {
                 backgroundColor = "rgba(255, 255, 0, 0.9)"; // Yellow for mild alerts
             }
-                    
+
+
+                // Apply dynamic background color
+            alertBox.style.background = backgroundColor;
+            
             alertBox.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <b>⚠️ Weather Alert: ${alertData.severity}</b>
