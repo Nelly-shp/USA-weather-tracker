@@ -258,14 +258,25 @@
         function showWeatherAlert(alertData) {
             var alertBox = document.createElement("div");
             alertBox.className = "weather-alert";
+
+        // Define colors based on severity
+            let backgroundColor;
+            if (alertData.severity.toLowerCase() === "severe") {
+                backgroundColor = "rgba(255, 0, 0, 0.9)"; // Red for severe
+            } else if (alertData.severity.toLowerCase() === "moderate") {
+                backgroundColor = "rgba(255, 165, 0, 0.9)"; // Orange for moderate
+            } else {
+                backgroundColor = "rgba(255, 255, 0, 0.9)"; // Yellow for mild alerts
+            }
+                    
             alertBox.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <b>⚠️ Weather Alert: ${alertData.severity}</b>
                     <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 16px; cursor: pointer;">❌</button>
                 </div>
                 <b>${alertData.headline}</b><br>
-                <p><strong>Details:</strong> ${alertData.desc}</p>
-                <p><strong>Instructions:</strong> ${alertData.instruction ? alertData.instruction : "N/A"}</p>
+                <p><strong>Details:</strong> ${alertData.desc}</p><br>
+                <p><strong>Instructions:</strong> ${alertData.instruction ? alertData.instruction : "N/A"}</p><br>
                 <p><strong>Expires:</strong> ${alertData.expires}</p>
             `;
             document.body.appendChild(alertBox);
@@ -273,7 +284,7 @@
             // Remove after 10 seconds
             setTimeout(() => {
                 alertBox.remove();
-            }, 10000);
+            }, 30000);
         }
 
 
