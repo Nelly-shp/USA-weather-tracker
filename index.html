@@ -85,6 +85,21 @@
             z-index: 1000;
         }
 
+        .weather-alert {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            max-width: 300px; /* Limit width */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        
     </style>
     <title>Global Weather Tracker</title>
 </head>
@@ -234,14 +249,17 @@
             return daysOfWeek[date.getDay()];
         }
 
-        //function to show weather alerts
+        // Function to show weather alerts
         function showWeatherAlert(alertData) {
             var alertBox = document.createElement("div");
             alertBox.className = "weather-alert";
             alertBox.innerHTML = `
-                <b>⚠️ Weather Alert:</b> ${alertData.headline} <br>
-                <p>${alertData.desc}</p>
-                <button onclick="this.parentElement.remove()">Close</button>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <b>⚠️ Weather Alert</b>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 16px; cursor: pointer;">❌</button>
+                </div>
+                <b>${alertData.headline}</b><br>
+                <p style="font-size: 14px; margin-top: 5px;">${alertData.desc}</p>
             `;
             document.body.appendChild(alertBox);
         }
