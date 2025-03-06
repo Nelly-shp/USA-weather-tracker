@@ -118,7 +118,19 @@
     <script>
         var map = L.map('map', {
             zoomControl: false
-        }).setView([39.8283, -98.5795], 4);
+        }).setView([40, -100], 4); // Center on North America
+        
+        // Restrict panning to North America
+        var northAmericaBounds = [
+            [5, -170],   // Southwest corner (near Central America)
+            [75, -50]    // Northeast corner (near Greenland)
+        ];
+        
+        map.setMaxBounds(northAmericaBounds);
+        map.on('drag', function() {
+            map.panInsideBounds(northAmericaBounds, { animate: false });
+        });
+
 
         var darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://carto.com/">Carto</a> contributors'
