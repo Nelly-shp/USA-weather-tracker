@@ -117,19 +117,24 @@
     <script src="js/geocoder.js"></script>
     <script>
         var map = L.map('map', {
-            zoomControl: false
-        }).setView([40, -100], 4); // Center on North America
+            zoomControl: false,
+            minZoom: 3, // Prevents excessive zooming out
+            maxBounds: [
+                [5, -170],   // Southwest corner (Central America)
+                [75, -50]    // Northeast corner (Greenland)
+            ]
+        }).setView([40, -100], 4); // Centered on North America
         
-        // Restrict panning to North America
-        var northAmericaBounds = [
-            [5, -170],   // Southwest corner (near Central America)
-            [75, -50]    // Northeast corner (near Greenland)
-        ];
+        // Ensure users stay within the bounds
+        map.setMaxBounds([
+            [5, -170],   // Southwest
+            [75, -50]    // Northeast
+        ]);
         
-        map.setMaxBounds(northAmericaBounds);
         map.on('drag', function() {
-            map.panInsideBounds(northAmericaBounds, { animate: false });
+            map.panInsideBounds(map.options.maxBounds, { animate: false });
         });
+
 
 
         var darkMap = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
