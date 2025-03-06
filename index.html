@@ -160,11 +160,11 @@
             maxZoom: 19
         });
 
-        var geocoder = L.Control.geocoder({
-            position: "topright",
-            placeholder: "Search",
-            defaultMarkGeocode: true
-        }).addTo(map);
+       // var geocoder = L.Control.geocoder({
+         //   position: "topright",
+          //  placeholder: "Search",
+          //  defaultMarkGeocode: true
+        //}).addTo(map);
 
         geocoder.on('markgeocode', function(e) {
             var latlng = e.geocode.center;
@@ -215,6 +215,7 @@
                 // Add event listener to the close button
                 document.getElementById('close-weather').addEventListener('click', function(event) {
                     event.stopPropagation(); // Prevents map click from triggering
+                    event.preventDefault(); // Prevents unintended default behaviors
                     weatherControl._div.innerHTML = "Click on the map to get weather info";
                 });
             } else {
