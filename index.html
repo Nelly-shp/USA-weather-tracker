@@ -255,20 +255,27 @@
             return daysOfWeek[date.getDay()];
         }
 
-        // Function to show weather alerts
         function showWeatherAlert(alertData) {
             var alertBox = document.createElement("div");
             alertBox.className = "weather-alert";
             alertBox.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <b>⚠️ Weather Alert</b>
+                    <b>⚠️ Weather Alert: ${alertData.severity}</b>
                     <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 16px; cursor: pointer;">❌</button>
                 </div>
                 <b>${alertData.headline}</b><br>
-                <p style="font-size: 14px; margin-top: 5px;">${alertData.desc}</p>
+                <p><strong>Details:</strong> ${alertData.desc}</p>
+                <p><strong>Instructions:</strong> ${alertData.instruction ? alertData.instruction : "N/A"}</p>
+                <p><strong>Expires:</strong> ${alertData.expires}</p>
             `;
             document.body.appendChild(alertBox);
+        
+            // Remove after 10 seconds
+            setTimeout(() => {
+                alertBox.remove();
+            }, 10000);
         }
+
 
         
         // Event listener for map clicks to fetch weather data at clicked location
